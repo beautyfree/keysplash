@@ -2,6 +2,7 @@
 // Cleaning Mode behavior is adapted from Vorssaint, Copyright (C) 2026 Vorssaint.
 
 import AppKit
+import AVFoundation
 import ApplicationServices
 import Carbon.HIToolbox
 import CoreImage
@@ -52,6 +53,11 @@ final class CleaningModeManager: ObservableObject {
     private var unlockDeadline: DispatchWorkItem?
     private var nextMarkID = 0
     private var colorIndex = 0
+    private var lastStampedKeyCode: Int64?
+    private var sameKeyStreak = 0
+    private var lastStampTime: TimeInterval = 0
+    private let playfulSound = PlayfulSound()
+    @Published private(set) var soundEnabled = true
     private let colors: [Color] = [.pink, .cyan, .yellow, .purple, .green, .orange, .blue]
 
     func activate() {
@@ -68,6 +74,8 @@ final class CleaningModeManager: ObservableObject {
             showTapFailure()
             return
         }
+        // Keep macOS Force Quit available as an emergency exit.
+        NSApp.presentationOptions = [.hideDock, .hideMenuBar, .disableProcessSwitching]
         installScreenObserver()
         showOverlays()
     }
@@ -76,7 +84,8 @@ final class CleaningModeManager: ObservableObject {
         var mask: CGEventMask = 0
         for type: CGEventType in [.keyDown, .keyUp, .flagsChanged, .leftMouseDown, .leftMouseUp,
                                   .rightMouseDown, .rightMouseUp, .otherMouseDown, .otherMouseUp,
-                                  Self.systemDefinedEventType] {
+                                  .mouseMoved, .leftMouseDragged, .rightMouseDragged, .otherMouseDragged,
+                                  .scrollWheel, Self.systemDefinedEventType] {
             mask |= CGEventMask(1) << type.rawValue
         }
         guard let tap = CGEvent.tapCreate(tap: .cghidEventTap, place: .headInsertEventTap,
@@ -113,7 +122,15 @@ final class CleaningModeManager: ObservableObject {
                 heldButtons.remove(button.number)
                 if unlockPending && heldButtons.isEmpty { DispatchQueue.main.async { self.finishUnlock() } }
             }
-            return Unmanaged.passUnretained(event)
+        }
+
+        if isPointerEvent(type) {
+            let overControls = panels.contains { panel in
+                let controlArea = CGRect(x: panel.frame.midX - 228, y: panel.frame.midY - 160,
+                                         width: 456, height: 320)
+                return panel.isVisible && controlArea.contains(NSEvent.mouseLocation)
+            }
+            return overControls ? Unmanaged.passUnretained(event) : nil
         }
 
         if type == Self.systemDefinedEventType {
@@ -196,6 +213,17 @@ final class CleaningModeManager: ObservableObject {
         }
     }
 
+    private func isPointerEvent(_ type: CGEventType) -> Bool {
+        switch type {
+        case .leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp,
+             .otherMouseDown, .otherMouseUp, .mouseMoved, .leftMouseDragged,
+             .rightMouseDragged, .otherMouseDragged, .scrollWheel:
+            return true
+        default:
+            return false
+        }
+    }
+
     private func requestUnlock() {
         guard tap != nil else { return }
         unlockPending = true
@@ -216,6 +244,7 @@ final class CleaningModeManager: ObservableObject {
         unlockDeadline = nil
         unlockPending = false
         if let tap { CGEvent.tapEnable(tap: tap, enable: false); CFMachPortInvalidate(tap) }
+        NSApp.presentationOptions = []
         if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
         tap = nil
         source = nil
@@ -228,15 +257,27 @@ final class CleaningModeManager: ObservableObject {
 
     private func addMark(for keyCode: Int64, keyboardType: Int64) {
         let point = KeyboardPosition.point(for: keyCode, keyboardType: keyboardType)
+        let now = ProcessInfo.processInfo.systemUptime
+        sameKeyStreak = lastStampedKeyCode == keyCode && now - lastStampTime < 1.1
+            ? sameKeyStreak + 1 : 1
+        lastStampedKeyCode = keyCode
+        lastStampTime = now
         let isLeftSide = point.x <= 0.5
         let imageIndex = Int.random(in: 0...1) * 2 + (isLeftSide ? 1 : 0)
         let color = colors.randomElement() ?? .pink
         nextMarkID += 1
         let id = nextMarkID
-        marks.append(SplashMark(id: id, x: point.x, y: point.y, color: color,
+        let growth = CGFloat(min(sameKeyStreak - 1, 5)) * 32
+        marks.append(SplashMark(id: id,
+                                x: min(max(point.x + CGFloat.random(in: -0.012...0.012), 0), 1),
+                                y: min(max(point.y + CGFloat.random(in: -0.012...0.012), 0), 1),
+                                color: color,
                                 imageIndex: imageIndex,
-                                size: CGFloat.random(in: 210...360),
-                                rotation: Double.random(in: -24...24)))
+                                size: min(CGFloat.random(in: 155...390) + growth, 540),
+                                heightScale: CGFloat.random(in: 0.76...1.12),
+                                rotation: Double.random(in: -36...36),
+                                repeatCount: sameKeyStreak))
+        if soundEnabled { playfulSound.play(streak: sameKeyStreak) }
         if marks.count > 18 { marks.removeFirst(marks.count - 18) }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) { [weak self] in
             withAnimation(.easeOut(duration: 0.3)) { self?.marks.removeAll { $0.id == id } }
@@ -255,6 +296,7 @@ final class CleaningModeManager: ObservableObject {
             panel.backgroundColor = .clear
             panel.isOpaque = false
             panel.hasShadow = false
+            // Mission Control space swipes are system gestures; keep the overlay present on every Space.
             panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
             let host = NSHostingView(rootView: CleaningOverlayView(manager: self))
             host.frame = NSRect(origin: .zero, size: frame.size)
@@ -265,6 +307,8 @@ final class CleaningModeManager: ObservableObject {
         old.filter { oldPanel in !panels.contains(where: { $0 === oldPanel }) }.forEach { $0.orderOut(nil) }
         panels.forEach { $0.orderFrontRegardless() }
     }
+
+    func toggleSound() { soundEnabled.toggle() }
 
     private func installScreenObserver() {
         screenObserver = NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification,
@@ -303,6 +347,56 @@ final class CleaningModeManager: ObservableObject {
     }
 }
 
+@MainActor
+private final class PlayfulSound {
+    private let notes: [AVAudioPlayer] = [440.0, 523.25, 659.25, 783.99, 987.77].compactMap { frequency in
+        guard let player = try? AVAudioPlayer(data: PlayfulSound.wave(frequency: frequency)) else { return nil }
+        player.volume = 0.14
+        player.prepareToPlay()
+        return player
+    }
+
+    func play(streak: Int) {
+        guard !notes.isEmpty else { return }
+        let index = streak > 1 ? (streak - 1) % notes.count : Int.random(in: notes.indices)
+        notes[index].currentTime = 0
+        notes[index].play()
+    }
+
+    private static func wave(frequency: Double) -> Data {
+        let sampleRate: UInt32 = 22_050
+        let frameCount = Int(Double(sampleRate) * 0.12)
+        var pcm = Data()
+        for frame in 0..<frameCount {
+            let time = Double(frame) / Double(sampleRate)
+            let envelope = pow(1 - Double(frame) / Double(frameCount), 2)
+            let tone = sin(2 * .pi * frequency * time) + 0.22 * sin(2 * .pi * frequency * 2.01 * time)
+            let sample = Int16(max(-1, min(1, tone * envelope * 0.34)) * Double(Int16.max))
+            appendLittleEndian(sample, to: &pcm)
+        }
+
+        var wave = Data("RIFF".utf8)
+        appendLittleEndian(UInt32(36 + pcm.count), to: &wave)
+        wave.append(contentsOf: "WAVEfmt ".utf8)
+        appendLittleEndian(UInt32(16), to: &wave)
+        appendLittleEndian(UInt16(1), to: &wave)
+        appendLittleEndian(UInt16(1), to: &wave)
+        appendLittleEndian(sampleRate, to: &wave)
+        appendLittleEndian(sampleRate * 2, to: &wave)
+        appendLittleEndian(UInt16(2), to: &wave)
+        appendLittleEndian(UInt16(16), to: &wave)
+        wave.append(contentsOf: "data".utf8)
+        appendLittleEndian(UInt32(pcm.count), to: &wave)
+        wave.append(pcm)
+        return wave
+    }
+
+    private static func appendLittleEndian<T: FixedWidthInteger>(_ value: T, to data: inout Data) {
+        var value = value.littleEndian
+        withUnsafeBytes(of: &value) { data.append(contentsOf: $0) }
+    }
+}
+
 struct SplashMark: Identifiable {
     let id: Int
     let x: CGFloat
@@ -310,7 +404,9 @@ struct SplashMark: Identifiable {
     let color: Color
     let imageIndex: Int
     let size: CGFloat
+    let heightScale: CGFloat
     let rotation: Double
+    let repeatCount: Int
 }
 
 private struct CleaningOverlayView: View {
@@ -321,8 +417,21 @@ private struct CleaningOverlayView: View {
             ZStack {
                 Color.clear.ignoresSafeArea()
                 ForEach(manager.marks) { mark in
+                    if mark.repeatCount >= 3 {
+                        Circle()
+                            .stroke(mark.color.opacity(0.32), lineWidth: 4)
+                            .frame(width: mark.size * 1.12, height: mark.size * 1.04)
+                            .position(x: mark.x * geometry.size.width, y: mark.y * geometry.size.height)
+                            .transition(.scale(scale: 0.35).combined(with: .opacity))
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 34 + CGFloat(min(mark.repeatCount, 6)) * 3, weight: .bold))
+                            .foregroundStyle(mark.color.opacity(0.9))
+                            .position(x: mark.x * geometry.size.width + mark.size * 0.28,
+                                      y: mark.y * geometry.size.height - mark.size * 0.3)
+                            .transition(.scale(scale: 0.25).combined(with: .opacity))
+                    }
                     Handprint(color: mark.color, imageIndex: mark.imageIndex)
-                        .frame(width: mark.size, height: mark.size * 0.92)
+                        .frame(width: mark.size, height: mark.size * mark.heightScale)
                         .rotationEffect(.degrees(mark.rotation))
                         .position(x: mark.x * geometry.size.width, y: mark.y * geometry.size.height)
                         .transition(.scale(scale: 0.45).combined(with: .opacity))
@@ -344,7 +453,19 @@ private struct CleaningOverlayView: View {
                         .background(.white, in: Capsule())
                         .buttonStyle(.plain)
                         .padding(.top, 5)
-                    Text("or press Esc five times").font(.system(size: 12)).foregroundStyle(.white.opacity(0.48))
+                    HStack(spacing: 10) {
+                        Text("or press Esc five times")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.white.opacity(0.58))
+                        Button { manager.toggleSound() } label: {
+                            Image(systemName: manager.soundEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.78))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(manager.soundEnabled ? "Mute sounds" : "Enable sounds")
+                        .help(manager.soundEnabled ? "Mute sounds" : "Enable sounds")
+                    }
                 }
                 .frame(maxWidth: 400)
                 .padding(.horizontal, 28)
@@ -355,6 +476,7 @@ private struct CleaningOverlayView: View {
                         .strokeBorder(.white.opacity(0.12), lineWidth: 1)
                 }
                 .shadow(color: .black.opacity(0.2), radius: 24, y: 8)
+                .frame(width: 456, height: 320)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             }
         }
