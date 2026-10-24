@@ -14,13 +14,13 @@ jobs:
   build:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build and package KeySplash
         run: |
           ./build-app.sh
           ditto -c -k --sequesterRsrc --keepParent dist/KeySplash.app KeySplash-macOS.zip
       - name: Upload app bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: KeySplash-macOS
           path: KeySplash-macOS.zip
@@ -34,7 +34,7 @@ jobs:
       contents: write
     steps:
       - name: Download app archive
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: KeySplash-macOS
           path: release-assets
