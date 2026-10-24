@@ -28,8 +28,8 @@ The app bundle is assembled with its app icon and handprint artwork by `build-ap
 
 - `DEVELOPER_ID_CERTIFICATE_P12_BASE64`
 - `DEVELOPER_ID_CERTIFICATE_PASSWORD`
-- `APPLE_ID`
-- `APPLE_APP_SPECIFIC_PASSWORD`
-- `APPLE_TEAM_ID`
+- `APP_STORE_CONNECT_API_KEY_BASE64`
+- `APP_STORE_CONNECT_API_KEY_ID`
+- `APP_STORE_CONNECT_ISSUER_ID`
 
 The key lock, Escape unlock gesture, and mouse-unlock behavior are adapted from [Vorssaint](https://github.com/vorssaint/vorssaint-utils)'s Cleaning Mode and distributed under GPL-3.0-or-later. See [LICENSE](LICENSE).
