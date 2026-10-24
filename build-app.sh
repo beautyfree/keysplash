@@ -32,13 +32,17 @@ cat > "$CONTENTS/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>KeySplash</string>
     <key>CFBundleIconFile</key><string>KeySplash</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>1.2.4</string>
-    <key>CFBundleVersion</key><string>8</string>
+    <key>CFBundleShortVersionString</key><string>1.2.5</string>
+    <key>CFBundleVersion</key><string>9</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
-    <key>LSUIElement</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
 </dict>
 </plist>
 PLIST
-codesign --force --deep --sign - "$APP"
+SIGNING_IDENTITY=${KEYSPLASH_SIGNING_IDENTITY:-$(security find-identity -v -p codesigning 2>/dev/null | awk -F '"' '/Developer ID Application:/ { print $2; exit }')}
+if [ -n "$SIGNING_IDENTITY" ]; then
+    codesign --force --deep --options runtime --sign "$SIGNING_IDENTITY" "$APP"
+else
+    codesign --force --deep --sign - "$APP"
+fi
 printf 'Built %s\n' "$APP"

@@ -24,7 +24,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let manager = CleaningModeManager()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApp.setActivationPolicy(.accessory)
         manager.activate()
     }
 
@@ -87,6 +86,7 @@ final class CleaningModeManager: ObservableObject {
             showTapFailure()
             return
         }
+        NSApp.setActivationPolicy(.accessory)
         // Keep macOS Force Quit available as an emergency exit.
         NSApp.presentationOptions = [.hideDock, .hideMenuBar, .disableProcessSwitching]
         setupWindow?.orderOut(nil)
@@ -104,6 +104,8 @@ final class CleaningModeManager: ObservableObject {
 
     func openAccessibilitySettings() {
         waitingForSettingsReturn = true
+        let promptKey = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
+        _ = AXIsProcessTrustedWithOptions([promptKey: true] as CFDictionary)
         guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"),
               NSWorkspace.shared.open(url) else {
             setupStatus = "System Settings could not be opened. Open Privacy & Security → Accessibility manually, then return here."
@@ -502,6 +504,8 @@ final class CleaningModeManager: ObservableObject {
     }
 
     private func showAccessibilitySetup() {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.presentationOptions = []
         if let setupWindow {
             setupWindow.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
@@ -565,7 +569,7 @@ private struct AccessibilitySetupView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     SetupStep(number: "1", title: "Open Accessibility settings", detail: "We’ll take you to the right System Settings page.", symbol: "gearshape.fill")
-                    SetupStep(number: "2", title: "Enable KeySplash", detail: "Find KeySplash in the app list and switch it on. Use the + button if it isn’t listed.", symbol: "switch.2")
+                    SetupStep(number: "2", title: "Enable KeySplash", detail: "Approve the macOS prompt if it appears. If KeySplash isn’t listed, use the + button to add it.", symbol: "switch.2")
                     SetupStep(number: "3", title: "Come back here", detail: "KeySplash checks again automatically and starts as soon as macOS allows it.", symbol: "arrow.uturn.backward")
                 }
                 .padding(15)

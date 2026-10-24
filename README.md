@@ -28,8 +28,8 @@ KeySplash is inspired by the Cleaning Mode in [Vorssaint’s vorssaint-utils](ht
 
 macOS requires Accessibility access before an app can capture and block keyboard input system-wide. KeySplash explains this in a visual setup window and does not lock the keyboard until permission is available.
 
-1. Click **Open Accessibility Settings** in KeySplash.
-2. In **System Settings → Privacy & Security → Accessibility**, switch on **KeySplash**. If it is not listed, use **+** and choose KeySplash from Applications.
+1. Click **Open Accessibility Settings** in KeySplash. This asks macOS to register KeySplash and opens the correct settings page.
+2. In **System Settings → Privacy & Security → Accessibility**, switch on **KeySplash**. If macOS has not added it yet, use **+** and choose KeySplash from Applications.
 3. Return to KeySplash. It checks the permission and starts automatically. If macOS has not refreshed access yet, choose **Reopen KeySplash** in the setup window.
 
 You can also click **Check Access** after enabling the switch. KeySplash keeps the setup window open while you visit System Settings, so there is no need to hunt for the app again.
