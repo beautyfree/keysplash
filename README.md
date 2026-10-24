@@ -1,24 +1,35 @@
 # KeySplash
 
-A small macOS app that turns keyboard cleaning mode into colorful handprint play. Opening the app covers every display and filters keyboard input. Tapping an ANSI key paints a bright, fading child-hand print at the matching relative position on each display. The keyboard's left half selects left-facing hand shapes and its right half selects right-facing shapes; every mark gets a random silhouette, color, size, and tilt.
+KeySplash turns keyboard cleaning mode into colorful handprint play. It covers every display, blocks normal keyboard input, and paints a fading child-sized handprint where each key is mapped on the keyboard. Press **Escape five times** or click **Unlock** to close it.
 
-## Build and run
+## Download and use
 
-Requires macOS 14 or later and Xcode Command Line Tools.
+Download the latest ready-to-run macOS app from [GitHub Releases](https://github.com/beautyfree/keysplash/releases/latest). Open `KeySplash-macOS.zip`, then move `KeySplash.app` to Applications and launch it.
+
+On first launch, allow KeySplash in **System Settings → Privacy & Security → Accessibility**, then open the app again. KeySplash stays transparent and filters input only while its keyboard event tap is active. If setup fails, it exits without showing the overlay, leaving the keyboard usable.
+
+## What it does
+
+- Maps physical key positions across the full keyboard and display, including ANSI, ISO, and JIS layouts.
+- Uses randomized, colorful left- and right-hand prints with varied sizes, angles, and a larger splash for repeated keys.
+- Plays a short sound on key presses; the speaker button mutes it.
+- Keeps mouse interaction limited to the centered Unlock and sound controls. macOS Force Quit remains available as an emergency exit.
+
+## Development
+
+KeySplash is a native Swift app for macOS 14 or later. To build locally, install Xcode Command Line Tools and run:
 
 ```sh
 ./build-app.sh
 open dist/KeySplash.app
 ```
 
-GitHub Actions builds the macOS app for pushes and pull requests. Pushing a version tag such as `v1.0.0` also creates a GitHub Release with the app archive. CI uses an ad-hoc signature; Developer ID signing and notarization are not configured, so public downloads may require additional Gatekeeper steps.
+The app bundle is assembled with its app icon and handprint artwork by `build-app.sh`. GitHub Actions builds it for pushes and pull requests. A `v*` tag publishes a GitHub Release after signing with a Developer ID certificate and notarizing the app with Apple. Repository Actions secrets required for release publishing:
 
-The first launch asks you to allow KeySplash under **System Settings → Privacy & Security → Accessibility**. After enabling it, open the app again. If the keyboard event filter cannot be installed, KeySplash exits without showing the overlay or blocking input.
+- `DEVELOPER_ID_CERTIFICATE_P12_BASE64`
+- `DEVELOPER_ID_CERTIFICATE_PASSWORD`
+- `APPLE_ID`
+- `APPLE_APP_SPECIFIC_PASSWORD`
+- `APPLE_TEAM_ID`
 
-Click **Unlock** with the mouse, or press **Escape five times**. Holding Escape does not count as five presses; another key resets progress. Unlocking closes KeySplash.
-
-Key positions are normalized across the full keyboard rectangle and projected across the full display. QWERTY, QWERTZ, and AZERTY input sources use physical key positions; the event's physical keyboard type selects ANSI, ISO, or JIS spacing. Special brightness and media keys map to their positions in the function row. Multi-display setups mirror the same projected key position on every display.
-
-## Source
-
-The keyboard lock, Escape unlock gesture, and mouse-unlock behavior are adapted from [Vorssaint](https://github.com/vorssaint/vorssaint-utils)'s Cleaning Mode and distributed under GPL-3.0-or-later. See [LICENSE](LICENSE).
+The key lock, Escape unlock gesture, and mouse-unlock behavior are adapted from [Vorssaint](https://github.com/vorssaint/vorssaint-utils)'s Cleaning Mode and distributed under GPL-3.0-or-later. See [LICENSE](LICENSE).
