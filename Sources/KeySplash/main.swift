@@ -28,6 +28,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         manager.activate()
     }
 
+    func applicationDidBecomeActive(_ notification: Notification) {
+        manager.applicationDidBecomeActive()
+    }
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
 
@@ -41,6 +45,8 @@ final class CleaningModeManager: ObservableObject {
 
     @Published private(set) var unlockProgress = 0
     @Published private(set) var marks: [SplashMark] = []
+    @Published private(set) var returnedFromSettings = false
+    @Published private(set) var setupStatus = "KeySplash needs Accessibility access to capture keyboard input while play mode is active."
 
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
@@ -56,6 +62,8 @@ final class CleaningModeManager: ObservableObject {
     private var lastStampedKeyCode: Int64?
     private var sameKeyStreak = 0
     private var lastStampTime: TimeInterval = 0
+    private var setupWindow: NSWindow?
+    private var waitingForSettingsReturn = false
     private let playfulSound = PlayfulSound()
     @Published private(set) var soundEnabled = true
     private let colors: [Color] = [.pink, .cyan, .yellow, .purple, .green, .orange, .blue]
@@ -67,7 +75,7 @@ final class CleaningModeManager: ObservableObject {
             return
         }
         guard AXIsProcessTrusted() else {
-            showAccessibilityPrompt()
+            showAccessibilitySetup()
             return
         }
         guard installTap() else {
@@ -76,9 +84,55 @@ final class CleaningModeManager: ObservableObject {
         }
         // Keep macOS Force Quit available as an emergency exit.
         NSApp.presentationOptions = [.hideDock, .hideMenuBar, .disableProcessSwitching]
+        setupWindow?.orderOut(nil)
         installScreenObserver()
         showOverlays()
     }
+
+    func applicationDidBecomeActive() {
+        guard waitingForSettingsReturn else { return }
+        waitingForSettingsReturn = false
+        returnedFromSettings = true
+        checkAccessibilityPermission()
+    }
+
+    func openAccessibilitySettings() {
+        waitingForSettingsReturn = true
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"),
+              NSWorkspace.shared.open(url) else {
+            setupStatus = "System Settings could not be opened. Open Privacy & Security → Accessibility manually, then return here."
+            return
+        }
+        setupStatus = "In System Settings, turn on KeySplash under Privacy & Security → Accessibility, then return here."
+    }
+
+    func checkAccessibilityPermission() {
+        guard AXIsProcessTrusted() else {
+            returnedFromSettings = true
+            setupStatus = "KeySplash still cannot see the permission. Check that its switch is on. If it is, reopen KeySplash below so macOS can refresh the permission."
+            return
+        }
+        returnedFromSettings = false
+        setupStatus = "Access granted. Starting KeySplash…"
+        activate()
+    }
+
+    func restartApplication() {
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.createsNewApplicationInstance = true
+        configuration.activates = true
+        NSWorkspace.shared.openApplication(at: Bundle.main.bundleURL, configuration: configuration) { _, error in
+            DispatchQueue.main.async {
+                guard error == nil else {
+                    self.setupStatus = "KeySplash could not reopen automatically. Quit it, then open KeySplash from Applications."
+                    return
+                }
+                NSApp.terminate(nil)
+            }
+        }
+    }
+
+    func quitSetup() { NSApp.terminate(nil) }
 
     private func installTap() -> Bool {
         var mask: CGEventMask = 0
@@ -317,17 +371,22 @@ final class CleaningModeManager: ObservableObject {
         }
     }
 
-    private func showAccessibilityPrompt() {
-        let alert = NSAlert()
-        alert.messageText = "Accessibility access is needed"
-        alert.informativeText = "Allow KeySplash in System Settings → Privacy & Security → Accessibility, then open it again."
-        alert.addButton(withTitle: "Open Settings")
-        alert.addButton(withTitle: "Quit")
-        if alert.runModal() == .alertFirstButtonReturn,
-           let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-            NSWorkspace.shared.open(url)
+    private func showAccessibilitySetup() {
+        if let setupWindow {
+            setupWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
         }
-        NSApp.terminate(nil)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 540, height: 650),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.title = "Set Up KeySplash"
+        window.center()
+        window.isReleasedWhenClosed = false
+        window.level = .floating
+        window.contentView = NSHostingView(rootView: AccessibilitySetupView(manager: self))
+        setupWindow = window
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     private func showTapFailure() {
@@ -344,6 +403,135 @@ final class CleaningModeManager: ObservableObject {
         alert.informativeText = "Rebuild KeySplash with ./build-app.sh. The keyboard was not locked."
         alert.runModal()
         NSApp.terminate(nil)
+    }
+}
+
+private struct AccessibilitySetupView: View {
+    @ObservedObject var manager: CleaningModeManager
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 16) {
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .frame(width: 70, height: 70)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("One-time setup")
+                        .font(.system(size: 25, weight: .bold, design: .rounded))
+                    Text("Give KeySplash permission to capture key presses")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.bottom, 21)
+
+            VStack(alignment: .leading, spacing: 15) {
+                Text("macOS protects keyboard input. KeySplash needs Accessibility access to block keys during play mode; it does not lock anything until that access is granted.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                VStack(alignment: .leading, spacing: 12) {
+                    SetupStep(number: "1", title: "Open Accessibility settings", detail: "We’ll take you to the right System Settings page.", symbol: "gearshape.fill")
+                    SetupStep(number: "2", title: "Enable KeySplash", detail: "Find KeySplash in the app list and switch it on. Use the + button if it isn’t listed.", symbol: "switch.2")
+                    SetupStep(number: "3", title: "Come back here", detail: "KeySplash checks again automatically and starts as soon as macOS allows it.", symbol: "arrow.uturn.backward")
+                }
+                .padding(15)
+                .background(Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+                settingsPath
+
+                Text(manager.setupStatus)
+                    .font(.system(size: 12))
+                    .foregroundStyle(manager.returnedFromSettings ? Color.orange : Color.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                HStack(spacing: 10) {
+                    Button(action: manager.openAccessibilitySettings) {
+                        Label("Open Accessibility Settings", systemImage: "arrow.up.forward.app")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+
+                    Button("Check Access", action: manager.checkAccessibilityPermission)
+                        .buttonStyle(.bordered)
+                        .controlSize(.large)
+                }
+
+                HStack {
+                    Button("Quit KeySplash", action: manager.quitSetup)
+                        .buttonStyle(.link)
+                    Spacer()
+                    if manager.returnedFromSettings {
+                        Button("Reopen KeySplash", action: manager.restartApplication)
+                            .buttonStyle(.link)
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(25)
+        .frame(width: 540, height: 650)
+        .background(Color(nsColor: .windowBackgroundColor))
+    }
+
+    private var settingsPath: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text("LOOK FOR THIS IN SYSTEM SETTINGS")
+                .font(.system(size: 10, weight: .bold))
+                .tracking(0.7)
+                .foregroundStyle(.secondary)
+            HStack(spacing: 10) {
+                Image(systemName: "hand.raised.fill")
+                    .foregroundStyle(.pink)
+                    .frame(width: 23)
+                Text("Privacy & Security")
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+                Text("Accessibility").fontWeight(.semibold)
+                Spacer(minLength: 3)
+                Text("KeySplash")
+                    .font(.system(size: 11, weight: .medium))
+                    .padding(.horizontal, 8).padding(.vertical, 5)
+                    .background(Color.accentColor.opacity(0.14), in: Capsule())
+            }
+            .font(.system(size: 12))
+            .padding(11)
+            .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 11))
+        }
+    }
+}
+
+private struct SetupStep: View {
+    let number: String
+    let title: String
+    let detail: String
+    let symbol: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 11) {
+            Text(number)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .frame(width: 23, height: 23)
+                .background(Color.accentColor, in: Circle())
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title).font(.system(size: 13, weight: .semibold))
+                Text(detail)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+            Image(systemName: symbol)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Color.accentColor.opacity(0.8))
+                .frame(width: 21)
+        }
     }
 }
 
