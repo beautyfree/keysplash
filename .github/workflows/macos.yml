@@ -100,4 +100,4 @@ jobs:
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" release-assets/KeySplash-macOS.zip --generate-notes
+        run: gh release create "$GITHUB_REF_NAME" release-assets/KeySplash-macOS.zip --generate-notes --repo "$GITHUB_REPOSITORY"
