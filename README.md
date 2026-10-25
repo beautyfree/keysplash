@@ -12,11 +12,11 @@ KeySplash turns keyboard-cleaning mode into a tiny screen adventure. It temporar
 
 ## See KeySplash in play mode
 
-<p align="center"><img src="docs/media/keysplash-play-demo.gif" width="800" alt="Rendered preview of KeySplash's transparent play overlay and colorful handprints"></p>
+<p align="center"><img src="docs/media/keysplash-play-demo.gif?v=hero-wave-1" width="800" alt="Rendered preview of KeySplash's transparent play overlay and colorful handprints"></p>
 
-<p align="center"><a href="docs/media/keysplash-play-demo.mp4">Watch the MP4 demo</a></p>
+<p align="center"><a href="docs/media/keysplash-play-demo.mp4?v=hero-wave-1">Watch the MP4 demo</a></p>
 
-The PNG poster is rendered from KeySplash's native SwiftUI play overlay. The GIF and MP4 are scripted previews, not live screen recordings; they use the same controls and handprint artwork on a plain light canvas, without a made-up Notes window or settings screen.
+The PNG poster is rendered from KeySplash's native SwiftUI play overlay. The GIF and MP4 are scripted previews, not live screen recordings; they use the same controls and handprint artwork over the original light KeySplash background, without a made-up Notes window or settings screen.
 
 ## Install KeySplash
 

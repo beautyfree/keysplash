@@ -68,7 +68,7 @@
       .button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid #111; border-radius: 999px; background: #101112; color: #fff; font-size: 13px; font-weight: 550; text-decoration: none; transition: transform .18s ease, background .18s ease; }
       .button:hover { transform: translateY(-1px); background: #333; }
       .button svg { width: 16px; height: 16px; }
-      .hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; margin: 12px; padding: 64px 28px 24px; border-radius: 28px; background: radial-gradient(ellipse 58% 62% at 12% 100%, #ffe7f0 0%, transparent 72%), radial-gradient(ellipse 48% 62% at 88% 92%, #e0f3ee 0%, transparent 72%), #fbfaf7; text-align: center; }
+      .hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; margin: 12px; padding: 64px 28px 24px; border-radius: 28px; background: #fbfaf7 url("artwork/keysplash-cta-light.png") center / cover no-repeat; text-align: center; }
       .hero-copy { position: relative; z-index: 2; max-width: 1040px; margin-inline: auto; }
       .hero h1 { margin: 0 auto 14px; color: var(--ink); font-family: var(--display); font-size: clamp(48px, 5.3vw, 68px); font-weight: 700; line-height: .98; letter-spacing: -.065em; }
       .hero h1 em { color: inherit; font-style: normal; font-weight: 700; }
@@ -136,7 +136,7 @@
         .brand img { width: 29px; height: 29px; border-radius: 8px; }
         .nav-links { display: none; }
         .button { min-height: 40px; padding-inline: 16px; font-size: 12px; }
-        .hero { margin: 7px; padding: 64px 20px 24px; border-radius: 22px; }
+        .hero { margin: 7px; padding: 64px 20px 24px; border-radius: 22px; background-position: 62% center; }
         .hero h1 { max-width: 520px; font-size: clamp(42px, 10.5vw, 54px); }
         .hero-copy > p { max-width: 410px; font-size: 14px; }
         .hero-stage { width: 100%; margin-top: 16px; }
@@ -185,9 +185,9 @@
           <p class="hero-note">Free · macOS 14 or later · No account or subscription</p>
         </div>
         <div class="hero-stage">
-          <video class="hero-demo-video" controls autoplay muted loop playsinline preload="metadata" poster="media/keysplash-play-mode.png" aria-label="Rendered preview of KeySplash play mode: handprints appear as keys are pressed">
-            <source src="media/keysplash-play-demo.mp4" type="video/mp4">
-            Your browser does not support embedded video. <a href="media/keysplash-play-demo.mp4">Watch the KeySplash play mode demo.</a>
+          <video class="hero-demo-video" controls autoplay muted loop playsinline preload="metadata" poster="media/keysplash-play-mode.png?v=hero-wave-1" aria-label="Rendered preview of KeySplash play mode: handprints appear as keys are pressed">
+            <source src="media/keysplash-play-demo.mp4?v=hero-wave-1" type="video/mp4">
+            Your browser does not support embedded video. <a href="media/keysplash-play-demo.mp4?v=hero-wave-1">Watch the KeySplash play mode demo.</a>
           </video>
         </div>
       </section>

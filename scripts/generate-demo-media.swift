@@ -12,6 +12,17 @@ let screenScale: CGFloat = 0.89
 let frameRate = 24
 let frameCount = 192
 let duration = Double(frameCount) / Double(frameRate)
+let backdropURL = root.appendingPathComponent("docs/artwork/keysplash-cta-light.png")
+guard let backdropSource = CGImageSourceCreateWithURL(backdropURL as CFURL, nil),
+      let sourceBackdrop = CGImageSourceCreateImageAtIndex(backdropSource, 0, nil) else {
+    fatalError("Could not load KeySplash demo background at \(backdropURL.path)")
+}
+let backdropCropWidth = CGFloat(sourceBackdrop.height) * CGFloat(width) / CGFloat(height)
+let backdropCrop = CGRect(x: (CGFloat(sourceBackdrop.width) - backdropCropWidth) / 2,
+                          y: 0, width: backdropCropWidth, height: CGFloat(sourceBackdrop.height))
+guard let backdropImage = sourceBackdrop.cropping(to: backdropCrop) else {
+    fatalError("Could not crop KeySplash demo background")
+}
 let palette: [NSColor] = [
     NSColor(hex: 0xFF477E), NSColor(hex: 0x2FD6C5), NSColor(hex: 0xFFD34D),
     NSColor(hex: 0x9B6CFF), NSColor(hex: 0x34C759), NSColor(hex: 0xFF8D49), NSColor(hex: 0x55A9FF)
@@ -118,8 +129,8 @@ print("Created \(movieURL.path) and \(gifURL.path) (\(String(format: "%.1f", dur
 
 func drawBackdrop() {
     let canvas = CGRect(x: 0, y: 0, width: width, height: height)
-    NSColor(hex: 0xE8EFED).setFill()
-    NSBezierPath(rect: canvas).fill()
+    NSImage(cgImage: backdropImage, size: canvas.size)
+        .draw(in: canvas, from: .zero, operation: .copy, fraction: 1)
 }
 
 func drawMarks(at time: Double) {
