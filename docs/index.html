@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" href="artwork/keysplash-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="KeySplash">
     <meta property="og:title" content="KeySplash — A playful Mac keyboard lock for kids">
@@ -43,8 +43,8 @@
         --blue: #bfe3e8;
         --purple: #5338df;
         --shell: min(1200px, calc(100% - 80px));
-        --sans: "Geist", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+        --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --display: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; scroll-padding-top: 84px; }
@@ -58,7 +58,8 @@
       .site-header { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; height: 76px; transition: background .2s, border-color .2s; border-bottom: 1px solid transparent; }
       .site-header.scrolled { background: #ffffffed; border-color: #ededeb; backdrop-filter: blur(15px); }
       .nav { display: grid; width: var(--shell); height: 100%; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 0 auto; }
-      .brand { display: inline-flex; width: fit-content; align-items: center; gap: 11px; font-family: var(--sans); font-size: 19px; font-weight: 520; letter-spacing: -.01em; text-decoration: none; }
+      .brand { display: inline-flex; width: fit-content; align-items: center; gap: 11px; color: #fff; font-family: var(--sans); font-size: 19px; font-weight: 520; letter-spacing: -.01em; text-decoration: none; text-shadow: 0 1px 12px #162b3b70; }
+      .site-header.scrolled .brand { color: var(--ink); text-shadow: none; }
       .brand img { width: 32px; height: 32px; border-radius: 9px; }
       .nav-links { display: flex; align-items: center; gap: 34px; list-style: none; margin: 0; padding: 0; }
       .nav-links a { font-size: 13px; font-weight: 550; text-decoration: none; }
@@ -67,33 +68,23 @@
       .button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid #111; border-radius: 999px; background: #101112; color: #fff; font-size: 13px; font-weight: 550; text-decoration: none; transition: transform .18s ease, background .18s ease; }
       .button:hover { transform: translateY(-1px); background: #333; }
       .button svg { width: 16px; height: 16px; }
-      .hero { position: relative; display: flex; min-height: min(900px, 100svh); min-height: max(730px, 100svh); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; margin: 12px; padding: 102px 28px 0; border-radius: 28px; isolation: isolate; background: linear-gradient(180deg, #a8bec0 0%, #d6dad1 56%, #e8d4b5 100%); text-align: center; }
+      /* Cloud artwork follows the Nudge Focus landing-page reference. */
+      .hero { position: relative; display: flex; min-height: max(1040px, 100svh); flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; margin: 12px; padding: 88px 28px 0; border-radius: 28px; isolation: isolate; background: #d8e8ec url("media/nudge-hero-clouds.webp") center top / auto max(1200px, 100svh) no-repeat; text-align: center; }
       .hero::before, .hero::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
-      .hero::before { inset: 0; opacity: .86; background: radial-gradient(ellipse at 7% 78%, #fff1d4 0 8%, transparent 27%), radial-gradient(ellipse at 92% 80%, #fff1d7 0 11%, transparent 31%), radial-gradient(ellipse at 53% 0%, #e8f2f2 0 8%, transparent 35%); }
-      .hero::after { right: -7%; bottom: -47%; width: 65%; aspect-ratio: 1; border-radius: 50%; background: #93b8bd; filter: blur(75px); opacity: .34; }
-      .hero-copy { position: relative; z-index: 2; max-width: 760px; margin-inline: auto; transform: translateY(-85px); }
-      .hero h1 { margin: 0 auto 17px; font-family: var(--serif); font-size: clamp(58px, 9vw, 128px); font-weight: 700; line-height: .98; letter-spacing: -.065em; }
-      .hero h1 em { color: #26393c; font-weight: 400; }
-      .hero-copy > p { max-width: 550px; margin: 0 auto; color: #343a3b; font-size: 16px; line-height: 1.5; }
-      .hero-actions { display: flex; justify-content: center; margin-top: 28px; }
-      .hero .button { min-height: 48px; padding-inline: 24px; }
-      .hero-note { margin: 13px 0 0 !important; color: #42494a !important; font-size: 12px !important; }
-      .hero-stage { position: absolute; right: 0; bottom: 0; left: 0; display: grid; height: 34%; place-items: end center; overflow: hidden; pointer-events: none; }
-      .hero-glow { position: absolute; bottom: -34%; width: min(820px, 80vw); aspect-ratio: 1; border-radius: 50%; background: #f7fcf499; filter: blur(3px); }
-      .hero-window { position: relative; z-index: 1; display: flex; width: min(620px, 75vw); height: 250px; flex-direction: column; padding: 11px; border: 1px solid #ffffffa8; border-bottom: 0; border-radius: 20px 20px 0 0; background: #f8f8f6; box-shadow: 0 20px 65px #273d4030; transform: translateY(95px) rotate(-1.3deg); }
-      .window-bar { display: flex; height: 23px; align-items: center; gap: 6px; padding: 0 4px 9px; color: #7b7d7b; font-size: 9px; font-weight: 600; }
-      .window-dot { width: 7px; height: 7px; border-radius: 50%; background: #fa6257; box-shadow: 11px 0 #f9be4e, 22px 0 #48bf6a; margin-right: 24px; }
-      .window-screen { position: relative; display: grid; flex: 1; place-items: center; overflow: hidden; border-radius: 13px; background: radial-gradient(ellipse at 50% 100%, #6a46ff, #3512b1 62%, #1d0b68); }
-      .window-screen::before, .window-screen::after { position: absolute; width: 210px; height: 210px; border-radius: 50%; background: #ffdf61; content: ""; filter: blur(1px); opacity: .16; }
-      .window-screen::before { top: -105px; left: -35px; }
-      .window-screen::after { right: -65px; bottom: -150px; background: #52ddce; }
-      .hero-icon { position: relative; z-index: 1; width: 144px; height: 144px; border: 5px solid #fff; border-radius: 30px; box-shadow: 0 13px 35px #07052266; transform: rotate(3deg); }
-      .keycap { position: absolute; z-index: 2; display: grid; width: 55px; height: 55px; place-items: center; border: 4px solid #fff; border-radius: 17px; background: #ffdc58; box-shadow: 0 10px 25px #3335; color: #272423; font-size: 23px; transform: rotate(-9deg); }
-      .keycap.one { bottom: 107px; left: calc(50% - 330px); }
-      .keycap.two { right: calc(50% - 325px); bottom: 55px; background: #63ddc1; transform: rotate(8deg); }
+      .hero::before { inset: 0; opacity: .2; background: linear-gradient(180deg, #12263535, transparent 32%, transparent 72%, #152a3b40); }
+      .hero::after { display: none; }
+      .hero-copy { position: relative; z-index: 2; max-width: 1040px; margin-inline: auto; }
+      .hero h1 { margin: 0 auto 14px; color: #fff; font-family: var(--display); font-size: clamp(52px, 7vw, 92px); font-weight: 700; line-height: .98; letter-spacing: -.065em; text-shadow: 0 2px 26px #132a3c52; }
+      .hero h1 em { color: inherit; font-style: normal; font-weight: 700; }
+      .hero-copy > p { max-width: 800px; margin: 0 auto; color: #151b20; font-size: 16px; line-height: 1.5; text-shadow: 0 1px 9px #ffffffa8; }
+      .hero-actions { display: flex; justify-content: center; margin-top: 18px; }
+      .hero .button { min-height: 46px; padding-inline: 24px; }
+      .hero-note { margin: 9px 0 0 !important; color: #202a31 !important; font-size: 12px !important; text-shadow: 0 1px 8px #ffffffb8; }
+      .hero-stage { position: relative; z-index: 1; width: min(980px, 86vw); margin: 20px auto -70px; }
+      .hero-demo-video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #ffffffc7; border-radius: 22px; background: #d5e6ea; box-shadow: 0 24px 80px #16303f55; object-fit: cover; }
       .section { padding-block: 112px; }
       .section-title { margin-bottom: 65px; text-align: center; }
-      .section-title h2 { margin-bottom: 12px; font-family: var(--serif); font-size: clamp(39px, 5vw, 62px); font-weight: 400; line-height: 1.05; letter-spacing: -.055em; }
+      .section-title h2 { margin-bottom: 12px; font-family: var(--display); font-size: clamp(39px, 5vw, 62px); font-weight: 400; line-height: 1.05; letter-spacing: -.055em; }
       .section-title p { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 15px; }
       .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
       .story { padding: 94px 0 105px; border-top: 1px solid var(--line); }
@@ -140,25 +131,25 @@
       .story-panel-copy { display: none; }
       .idea { padding: 88px 0 100px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
       .idea-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
-      .idea-title { font-family: var(--serif); font-size: clamp(38px, 4.8vw, 58px); font-weight: 400; line-height: 1.06; letter-spacing: -.055em; }
+      .idea-title { font-family: var(--display); font-size: clamp(38px, 4.8vw, 58px); font-weight: 400; line-height: 1.06; letter-spacing: -.055em; }
       .idea-copy { max-width: 470px; color: #66696b; font-size: 15px; }
       .idea-copy p:last-child { margin-bottom: 0; }
-      .idea-note { grid-column: 1 / -1; margin: 24px 0 0; padding: 30px 0 0; border-top: 1px solid var(--line); font-family: var(--serif); font-size: clamp(24px, 3.3vw, 38px); line-height: 1.18; letter-spacing: -.04em; }
+      .idea-note { grid-column: 1 / -1; margin: 24px 0 0; padding: 30px 0 0; border-top: 1px solid var(--line); font-family: var(--display); font-size: clamp(24px, 3.3vw, 38px); line-height: 1.18; letter-spacing: -.04em; }
       .idea-note span { color: #989b9b; }
       .pricing { padding: 104px 0 0; }
       .pricing-card { position: relative; display: grid; min-height: 380px; grid-template-columns: 1.1fr .9fr; align-items: center; overflow: hidden; padding: 55px 70px; border: 1px solid #e8eeed; border-radius: 20px; background: linear-gradient(125deg, #f5f7f5, #eaf2f0 65%, #dce9e8); }
       .pricing-card::after { position: absolute; right: -80px; bottom: -290px; width: 520px; aspect-ratio: 1; border: 1px solid #ffffff; border-radius: 50%; box-shadow: 0 0 0 34px #ffffff55, 0 0 0 68px #ffffff38; content: ""; }
       .pricing-copy { position: relative; z-index: 1; }
-      .pricing-copy h2 { max-width: 470px; margin: 0 0 14px; font-family: var(--serif); font-size: clamp(38px, 4.6vw, 56px); font-weight: 400; line-height: 1.02; letter-spacing: -.06em; }
+      .pricing-copy h2 { max-width: 470px; margin: 0 0 14px; font-family: var(--display); font-size: clamp(38px, 4.6vw, 56px); font-weight: 400; line-height: 1.02; letter-spacing: -.06em; }
       .pricing-copy p { max-width: 430px; margin-bottom: 22px; color: #686e6e; font-size: 14px; }
       .pricing-copy .button { background: #111; }
       .price-panel { position: relative; z-index: 1; justify-self: end; width: min(100%, 330px); padding: 25px; border: 1px solid #fff; border-radius: 14px; background: #ffffffd9; box-shadow: 0 15px 50px #3b56521a; }
       .price-panel p { margin: 0; color: #767b7b; font-size: 12px; }
-      .price-panel strong { display: block; margin: 3px 0 11px; font-family: var(--serif); font-size: 54px; font-weight: 400; letter-spacing: -.06em; }
+      .price-panel strong { display: block; margin: 3px 0 11px; font-family: var(--display); font-size: 54px; font-weight: 400; letter-spacing: -.06em; }
       .price-panel ul { display: grid; gap: 9px; margin: 0; padding: 14px 0 0; border-top: 1px solid #e9ebea; list-style: none; color: #515657; font-size: 12px; }
       .price-panel li::before { margin-right: 9px; color: #398b6a; content: "✓"; }
       .faq { display: grid; grid-template-columns: .48fr 1.52fr; gap: 65px; padding: 100px 0 110px; }
-      .faq h2 { margin: 0; font-family: var(--serif); font-size: 43px; font-weight: 400; letter-spacing: -.055em; }
+      .faq h2 { margin: 0; font-family: var(--display); font-size: 43px; font-weight: 400; letter-spacing: -.055em; }
       .faq-list { border-top: 1px solid var(--line); }
       details { border-bottom: 1px solid var(--line); }
       summary { position: relative; padding: 20px 35px 20px 0; cursor: pointer; font-size: 14px; font-weight: 520; list-style: none; }
@@ -169,7 +160,7 @@
       .final-cta { padding: 0 0 75px; }
       .final-card { position: relative; display: flex; min-height: 310px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 48px 28px; border-radius: 20px; background: radial-gradient(ellipse at 15% 10%, #83bbc5 0, transparent 40%), linear-gradient(135deg, #183847, #152d4e 60%, #312b66); color: #fff; text-align: center; }
       .final-card::after { position: absolute; right: -15%; bottom: -110%; width: 65%; aspect-ratio: 1; border: 1px solid #ffffff42; border-radius: 50%; box-shadow: 0 0 0 34px #ffffff12, 0 0 0 68px #ffffff0c; content: ""; }
-      .final-card h2 { position: relative; z-index: 1; max-width: 650px; margin: 0 0 13px; font-family: var(--serif); font-size: clamp(40px, 5vw, 60px); font-weight: 400; line-height: 1.03; letter-spacing: -.06em; }
+      .final-card h2 { position: relative; z-index: 1; max-width: 650px; margin: 0 0 13px; font-family: var(--display); font-size: clamp(40px, 5vw, 60px); font-weight: 400; line-height: 1.03; letter-spacing: -.06em; }
       .final-card p { position: relative; z-index: 1; max-width: 470px; margin: 0 0 22px; color: #d1d9dd; font-size: 14px; }
       .final-card .button { position: relative; z-index: 1; border-color: #fff; background: #fff; color: #151515; }
       footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px; padding: 34px 0 50px; border-top: 1px solid var(--line); }
@@ -184,15 +175,11 @@
         .brand img { width: 29px; height: 29px; border-radius: 8px; }
         .nav-links { display: none; }
         .button { min-height: 40px; padding-inline: 16px; font-size: 12px; }
-        .hero { min-height: max(760px, 100svh); margin: 7px; padding: 88px 20px 0; border-radius: 22px; }
+        .hero { min-height: max(850px, 100svh); margin: 7px; padding: 82px 20px 0; border-radius: 22px; }
         .hero h1 { max-width: 520px; font-size: clamp(54px, 12vw, 78px); }
-        .hero-copy { transform: translateY(-72px); }
         .hero-copy > p { max-width: 410px; font-size: 14px; }
-        .hero-stage { height: 30%; }
-        .hero-window { width: 87vw; height: 215px; transform: translateY(84px) rotate(-1deg); }
-        .hero-icon { width: 118px; height: 118px; border-radius: 25px; }
-        .keycap.one { bottom: 75px; left: 8%; }
-        .keycap.two { right: 8%; bottom: 44px; }
+        .hero-stage { width: 92vw; margin-top: 22px; }
+        .hero-demo-video { border-radius: 15px; }
         .section { padding-block: 75px; }
         .story { padding: 74px 0; }
         .story { padding-top: 58px; }
@@ -255,17 +242,15 @@
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-copy">
           <h1 id="hero-title">A little room<br>for <em>curious hands.</em></h1>
-          <p>KeySplash turns your Mac keyboard into a colorful play space. Little taps make bright handprints while your work stays right where you left it.</p>
+          <p>KeySplash keeps your Mac keyboard safe while little taps bring colorful handprints to the screen.</p>
           <div class="hero-actions"><a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip"><span aria-hidden="true">↓</span> Download for macOS</a></div>
           <p class="hero-note">Free · macOS 14 or later · No account or subscription</p>
         </div>
-        <div class="hero-stage" aria-hidden="true">
-          <div class="hero-glow"></div>
-          <span class="keycap one">⌘</span><span class="keycap two">↵</span>
-          <div class="hero-window">
-            <div class="window-bar"><span class="window-dot"></span>KeySplash · Play mode</div>
-            <div class="window-screen"><img class="hero-icon" src="artwork/keysplash-icon.png" alt=""></div>
-          </div>
+        <div class="hero-stage">
+          <video class="hero-demo-video" controls autoplay muted loop playsinline preload="metadata" poster="media/keysplash-play-demo.gif" aria-label="KeySplash play mode demo: handprints appear as keys are pressed">
+            <source src="media/keysplash-play-demo.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="media/keysplash-play-demo.mp4">Watch the KeySplash play mode demo.</a>
+          </video>
         </div>
       </section>
 
@@ -294,7 +279,7 @@
             </article>
             <article class="story-panel" id="feature-prints">
               <div class="product-visual play-demo-visual">
-                <video class="play-demo-video" controls autoplay muted loop playsinline preload="metadata" poster="media/keysplash-play-demo.gif" aria-label="KeySplash play mode demo: colorful handprints appear as keys are tapped">
+                <video class="play-demo-video" controls muted loop playsinline preload="none" poster="media/keysplash-play-demo.gif" aria-label="KeySplash play mode demo: colorful handprints appear as keys are tapped">
                   <source src="media/keysplash-play-demo.mp4" type="video/mp4">
                   Your browser does not support embedded video. <a href="media/keysplash-play-demo.mp4">Watch the KeySplash play mode demo.</a>
                 </video>
