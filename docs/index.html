@@ -58,7 +58,7 @@
       .site-header { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; height: 76px; transition: background .2s, border-color .2s; border-bottom: 1px solid transparent; }
       .site-header.scrolled { background: #ffffffed; border-color: #ededeb; backdrop-filter: blur(15px); }
       .nav { display: grid; width: var(--shell); height: 100%; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 0 auto; }
-      .brand { display: inline-flex; width: fit-content; align-items: center; gap: 11px; color: #fff; font-family: var(--sans); font-size: 19px; font-weight: 520; letter-spacing: -.01em; text-decoration: none; text-shadow: 0 1px 12px #162b3b70; }
+      .brand { display: inline-flex; width: fit-content; align-items: center; gap: 11px; color: var(--ink); font-family: var(--sans); font-size: 19px; font-weight: 520; letter-spacing: -.01em; text-decoration: none; }
       .site-header.scrolled .brand { color: var(--ink); text-shadow: none; }
       .brand img { width: 32px; height: 32px; border-radius: 9px; }
       .nav-links { display: flex; align-items: center; gap: 34px; list-style: none; margin: 0; padding: 0; }
@@ -68,18 +68,14 @@
       .button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid #111; border-radius: 999px; background: #101112; color: #fff; font-size: 13px; font-weight: 550; text-decoration: none; transition: transform .18s ease, background .18s ease; }
       .button:hover { transform: translateY(-1px); background: #333; }
       .button svg { width: 16px; height: 16px; }
-      /* Cloud artwork follows the Nudge Focus landing-page reference. */
-      .hero { position: relative; display: flex; min-height: max(1040px, 100svh); flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; margin: 12px; padding: 88px 28px 0; border-radius: 28px; isolation: isolate; background: #d8e8ec url("media/nudge-hero-clouds.webp") center top / auto max(1200px, 100svh) no-repeat; text-align: center; }
-      .hero::before, .hero::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
-      .hero::before { inset: 0; opacity: .2; background: linear-gradient(180deg, #12263535, transparent 32%, transparent 72%, #152a3b40); }
-      .hero::after { display: none; }
+      .hero { position: relative; display: flex; min-height: max(1040px, 100svh); flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; margin: 12px; padding: 88px 28px 0; border-radius: 28px; background: radial-gradient(ellipse 70% 46% at 50% 0%, #dff2ff 0%, transparent 72%), radial-gradient(ellipse 52% 48% at 100% 28%, #f1eaff 0%, transparent 72%), radial-gradient(ellipse 48% 42% at 0% 38%, #e6f7ef 0%, transparent 72%), #f8fafc; text-align: center; }
       .hero-copy { position: relative; z-index: 2; max-width: 1040px; margin-inline: auto; }
-      .hero h1 { margin: 0 auto 14px; color: #fff; font-family: var(--display); font-size: clamp(52px, 7vw, 92px); font-weight: 700; line-height: .98; letter-spacing: -.065em; text-shadow: 0 2px 26px #132a3c52; }
+      .hero h1 { margin: 0 auto 14px; color: var(--ink); font-family: var(--display); font-size: clamp(52px, 7vw, 92px); font-weight: 700; line-height: .98; letter-spacing: -.065em; }
       .hero h1 em { color: inherit; font-style: normal; font-weight: 700; }
-      .hero-copy > p { max-width: 800px; margin: 0 auto; color: #151b20; font-size: 16px; line-height: 1.5; text-shadow: 0 1px 9px #ffffffa8; }
+      .hero-copy > p { max-width: 800px; margin: 0 auto; color: #34383c; font-size: 16px; line-height: 1.5; }
       .hero-actions { display: flex; justify-content: center; margin-top: 18px; }
       .hero .button { min-height: 46px; padding-inline: 24px; }
-      .hero-note { margin: 9px 0 0 !important; color: #202a31 !important; font-size: 12px !important; text-shadow: 0 1px 8px #ffffffb8; }
+      .hero-note { margin: 9px 0 0 !important; color: #555b60 !important; font-size: 12px !important; }
       .hero-stage { position: relative; z-index: 1; width: min(980px, 86vw); margin: 20px auto -70px; }
       .hero-demo-video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #ffffffc7; border-radius: 22px; background: #d5e6ea; box-shadow: 0 24px 80px #16303f55; object-fit: cover; }
       .section { padding-block: 112px; }
