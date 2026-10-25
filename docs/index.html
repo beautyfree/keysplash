@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#dce9f4">
-    <title>KeySplash — A Playful Mac Keyboard Lock for Kids</title>
-    <meta name="description" content="A playful keyboard lock for Mac that turns toddler key presses into colorful handprints. Keep accidental typing out of your work with KeySplash.">
+    <meta name="theme-color" content="#f7f8f7">
+    <title>KeySplash — A playful Mac keyboard lock for kids</title>
+    <meta name="description" content="Turn your Mac keyboard into a playful screen for curious kids. KeySplash pauses typing and turns little key presses into colorful handprints.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://beautyfree.github.io/keysplash/">
     <link rel="icon" type="image/png" href="artwork/keysplash-icon.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="KeySplash">
-    <meta property="og:title" content="KeySplash — A Playful Mac Keyboard Lock for Kids">
+    <meta property="og:title" content="KeySplash — A playful Mac keyboard lock for kids">
     <meta property="og:description" content="A little keyboard break for Mac, made for curious kids and busy parents.">
     <meta property="og:url" content="https://beautyfree.github.io/keysplash/">
     <meta property="og:image" content="https://beautyfree.github.io/keysplash/artwork/keysplash-icon.png">
@@ -33,407 +33,360 @@
     <style>
       :root {
         color-scheme: light;
-        --ink: #211f30;
-        --muted: #716e7c;
-        --paper: #f8f7f4;
-        --white: #fff;
-        --line: #e8e5e0;
-        --purple: #5839e8;
-        --deep: #19152d;
-        --coral: #ff7167;
-        --yellow: #ffda60;
-        --mint: #84e3d0;
+        --ink: #17191b;
+        --muted: #777a7d;
+        --line: #e6e7e5;
+        --paper: #fff;
+        --blue: #bfe3e8;
+        --purple: #5338df;
+        --shell: min(1200px, calc(100% - 80px));
       }
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        background: var(--paper);
-        color: var(--ink);
-        font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        -webkit-font-smoothing: antialiased;
-      }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
       a { color: inherit; }
+      img { display: block; max-width: 100%; }
       h1, h2, h3, p { margin-top: 0; }
-      .shell { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
-      .hero-shell {
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
-        margin: 12px;
-        border-radius: 30px;
-        background:
-          radial-gradient(ellipse at 12% 30%, #fff8d7aa 0 12%, transparent 34%),
-          radial-gradient(ellipse at 88% 14%, #c8bdff99 0 13%, transparent 34%),
-          linear-gradient(145deg, #cbe1f2 0%, #e4e6f6 53%, #f9e5d4 100%);
-      }
-      .hero-shell::before, .hero-shell::after {
-        position: absolute;
-        z-index: -1;
-        width: 370px;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        background: #fff9;
-        filter: blur(2px);
-        content: "";
-      }
-      .hero-shell::before { top: 18%; left: -240px; }
-      .hero-shell::after { right: -225px; bottom: 13%; width: 450px; background: #ffbca866; }
-      .topbar { position: relative; z-index: 2; display: flex; height: 82px; align-items: center; justify-content: space-between; }
-      .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; letter-spacing: -.045em; text-decoration: none; }
-      .brand img { width: 39px; height: 39px; border-radius: 11px; }
-      nav { display: flex; align-items: center; gap: 29px; color: #4c4a5a; font-size: 14px; font-weight: 650; }
-      nav a { text-decoration: none; }
-      nav a:not(.button):hover, footer a:hover { color: var(--purple); }
-      .button { display: inline-flex; min-height: 47px; align-items: center; justify-content: center; gap: 9px; padding: 0 21px; border: 0; border-radius: 999px; background: var(--deep); color: white; font-size: 14px; font-weight: 730; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
-      .button:hover { transform: translateY(-2px); box-shadow: 0 9px 22px #1713292e; }
-      .button svg { width: 17px; height: 17px; }
-      .hero { position: relative; padding: 58px 24px 0; text-align: center; }
-      .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; color: var(--purple); font-size: 11px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
-      .eyebrow::before { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); content: ""; }
-      h1 { max-width: 970px; margin: 0 auto 17px; font-size: clamp(58px, 9.4vw, 112px); font-weight: 780; line-height: .91; letter-spacing: -.083em; }
-      h1 span { color: var(--purple); }
-      .hero-copy { max-width: 590px; margin: 0 auto 22px; color: #555364; font-size: 18px; line-height: 1.55; }
-      .hero-actions { display: flex; align-items: center; justify-content: center; gap: 17px; }
-      .hero-note { margin: 13px 0 0; color: #615f6d; font-size: 12px; }
-      .hero-art { position: relative; display: grid; width: min(930px, 100%); min-height: 355px; margin: 41px auto 0; place-items: center; }
-      .art-halo { position: absolute; width: 320px; aspect-ratio: 1; border-radius: 50%; background: #fff7; filter: blur(1px); }
-      .art-frame { position: relative; display: flex; width: min(780px, 94%); min-height: 300px; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #ffffffc7; border-radius: 26px 26px 0 0; background: linear-gradient(125deg, #2a176c 0%, #4020be 52%, #661ee8 100%); box-shadow: 0 28px 75px #36257242; }
-      .art-frame::before, .art-frame::after { position: absolute; width: 270px; aspect-ratio: 1; border: 1px solid #ffffff26; border-radius: 50%; content: ""; }
-      .art-frame::before { top: -143px; left: -70px; box-shadow: 0 0 0 26px #ffffff0b, 0 0 0 53px #ffffff09; }
-      .art-frame::after { right: -126px; bottom: -182px; width: 360px; box-shadow: 0 0 0 27px #ffffff0c, 0 0 0 54px #ffffff0a; }
-      .art-image { position: relative; z-index: 1; width: 267px; height: 267px; border: 8px solid white; border-radius: 35px; background: #31009b; box-shadow: 0 18px 45px #0c062c66; transform: rotate(-4deg); }
-      .art-caption { position: absolute; z-index: 2; bottom: 25px; left: 26px; display: flex; align-items: center; gap: 9px; color: #ffffffd9; font-size: 12px; font-weight: 650; letter-spacing: .015em; }
-      .art-caption::before { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 4px #84e3d033; content: ""; }
-      .art-tag { position: absolute; z-index: 2; top: 29px; right: 27px; padding: 8px 12px; border: 1px solid #ffffff3a; border-radius: 999px; background: #ffffff18; color: #fff; font-size: 11px; font-weight: 700; backdrop-filter: blur(8px); }
-      .art-sticker { position: absolute; z-index: 3; display: grid; width: 73px; height: 73px; place-items: center; border: 5px solid white; border-radius: 24px; background: var(--yellow); box-shadow: 0 10px 24px #1f164236; font-size: 34px; transform: rotate(-10deg); }
-      .art-sticker.left { top: 20px; left: max(3%, calc((100% - 780px) / 2 - 26px)); }
-      .art-sticker.right { right: max(3%, calc((100% - 780px) / 2 - 18px)); bottom: 23px; width: 66px; height: 66px; border-radius: 21px; background: var(--mint); font-size: 29px; transform: rotate(9deg); }
-      .section { padding-block: 100px; }
-      .section-heading { max-width: 680px; margin: 0 auto 42px; text-align: center; }
-      .section-heading h2, .story-copy h2 { margin-bottom: 14px; font-size: clamp(38px, 5.3vw, 62px); font-weight: 760; line-height: .98; letter-spacing: -.07em; }
-      .section-heading > p:last-child { margin-bottom: 0; color: var(--muted); font-size: 17px; }
-      .features { background: var(--white); border-block: 1px solid var(--line); }
-      .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-      .feature { min-height: 219px; padding: 25px; border: 1px solid var(--line); border-radius: 21px; background: #fff; }
-      .feature-icon { display: grid; width: 47px; height: 47px; margin-bottom: 23px; place-items: center; border-radius: 15px; background: #f0ebff; font-size: 23px; }
-      .feature:nth-child(2) .feature-icon { background: #fff2cd; }
-      .feature:nth-child(3) .feature-icon { background: #ffe7e2; }
-      .feature h3 { margin-bottom: 8px; font-size: 19px; letter-spacing: -.03em; }
-      .feature p { margin-bottom: 0; color: var(--muted); font-size: 14px; }
-      .how { display: grid; grid-template-columns: .85fr 1.15fr; gap: 68px; align-items: center; }
-      .how-copy .eyebrow { margin-bottom: 17px; }
-      .how-copy h2 { margin-bottom: 14px; font-size: clamp(38px, 5.1vw, 58px); line-height: .99; letter-spacing: -.07em; }
-      .how-copy > p { margin-bottom: 27px; color: var(--muted); }
-      .steps { display: grid; gap: 8px; }
-      .step { display: grid; grid-template-columns: 38px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-      .step-number { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 11px; background: #eeeaff; color: var(--purple); font-size: 12px; font-weight: 850; }
-      .step h3 { margin: 1px 0 4px; font-size: 15px; }
-      .step p { margin: 0; color: var(--muted); font-size: 13px; }
-      .how-art { position: relative; display: grid; min-height: 455px; place-items: center; overflow: hidden; border-radius: 28px; background: linear-gradient(145deg, #d6e7f6, #e5dcff 62%, #ffe3d8); }
-      .how-art::before { position: absolute; width: 280px; aspect-ratio: 1; border-radius: 50%; background: #fff8; content: ""; }
-      .mini-window { position: relative; width: min(79%, 430px); padding: 17px; border: 1px solid #ffffffd6; border-radius: 25px; background: #fff; box-shadow: 0 22px 60px #39315829; transform: rotate(2deg); }
-      .mini-top { display: flex; align-items: center; gap: 6px; padding: 0 2px 14px; color: #777483; font-size: 11px; font-weight: 700; }
-      .mini-top span { width: 7px; height: 7px; border-radius: 50%; background: #ff8175; box-shadow: 11px 0 #ffca61, 22px 0 #79d7b0; margin-right: 23px; }
-      .mini-screen { display: grid; min-height: 243px; place-items: center; overflow: hidden; border-radius: 17px; background: radial-gradient(circle at 60% 35%, #7653ff, #31118f 75%); }
-      .mini-screen img { width: 188px; height: 188px; border: 6px solid white; border-radius: 25px; box-shadow: 0 14px 35px #140b4d66; transform: rotate(-6deg); }
-      .mini-foot { display: flex; justify-content: space-between; padding: 12px 3px 0; color: #777483; font-size: 10px; font-weight: 650; }
-      .floating-key { position: absolute; top: 60px; right: 36px; display: grid; width: 72px; height: 72px; place-items: center; border: 5px solid white; border-radius: 23px; background: var(--yellow); box-shadow: 0 13px 28px #3a2b5930; color: #291e48; font-size: 30px; transform: rotate(9deg); }
-      .floating-note { position: absolute; bottom: 55px; left: 25px; max-width: 150px; padding: 13px 16px; border: 1px solid #ffffff; border-radius: 16px; background: #fff; box-shadow: 0 10px 25px #39315816; color: #5a5668; font-size: 12px; font-weight: 680; transform: rotate(-5deg); }
-      .story-band { background: #fff; border-block: 1px solid var(--line); }
-      .story { display: grid; grid-template-columns: .48fr 1.52fr; gap: 70px; align-items: start; }
-      .story-mark { display: grid; width: 134px; height: 134px; place-items: center; border-radius: 39px; background: #fff0c7; font-size: 57px; transform: rotate(-7deg); }
-      .story-copy h2 { max-width: 740px; }
-      .story-copy p { max-width: 730px; color: var(--muted); }
-      .install { background: #f0edf9; }
-      .install .section-heading { margin-bottom: 35px; }
-      .install-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-      .install-card { min-height: 186px; padding: 24px; border: 1px solid #e6e1f0; border-radius: 21px; background: #fff; }
-      .install-card .step-number { margin-bottom: 19px; }
-      .install-card h3 { margin-bottom: 8px; font-size: 17px; }
-      .install-card p { margin: 0; color: var(--muted); font-size: 14px; }
-      .access { padding-block: 78px; }
-      .access-card { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 48px; border-radius: 28px; background: var(--deep); color: white; }
-      .access-card .eyebrow { color: #c8bcff; }
-      .access-card h2 { margin-bottom: 14px; font-size: clamp(34px, 4.4vw, 49px); line-height: .98; letter-spacing: -.065em; }
-      .access-card p { margin-bottom: 0; color: #c9c6d5; }
-      .access-list { margin: 0; padding: 0; list-style: none; counter-reset: access; }
-      .access-list li { position: relative; min-height: 60px; padding: 0 0 17px 43px; color: #e4e1ec; font-size: 14px; counter-increment: access; }
-      .access-list li::before { position: absolute; top: -2px; left: 0; display: grid; width: 29px; height: 29px; place-items: center; border: 1px solid #ffffff35; border-radius: 10px; color: #d0c5ff; font-size: 11px; font-weight: 800; content: counter(access, decimal-leading-zero); }
-      .access-list strong { color: #fff; }
-      .faq { background: #fff; border-block: 1px solid var(--line); }
-      .faq-layout { display: grid; grid-template-columns: .65fr 1.35fr; gap: 65px; }
-      .faq-title h2 { font-size: clamp(38px, 5vw, 57px); line-height: .99; letter-spacing: -.07em; }
+      .shell { width: var(--shell); margin-inline: auto; }
+      .skip-link { position: fixed; z-index: 20; top: 8px; left: 8px; padding: 10px 15px; border-radius: 999px; background: #111; color: #fff; transform: translateY(-150%); }
+      .skip-link:focus { transform: none; }
+      .site-header { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; height: 76px; transition: background .2s, border-color .2s; border-bottom: 1px solid transparent; }
+      .site-header.scrolled { background: #ffffffed; border-color: #ededeb; backdrop-filter: blur(15px); }
+      .nav { display: grid; width: var(--shell); height: 100%; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 0 auto; }
+      .brand { display: inline-flex; width: fit-content; align-items: center; gap: 11px; font-size: 19px; font-weight: 580; letter-spacing: -.055em; text-decoration: none; }
+      .brand img { width: 32px; height: 32px; border-radius: 9px; }
+      .nav-links { display: flex; align-items: center; gap: 34px; list-style: none; margin: 0; padding: 0; }
+      .nav-links a { font-size: 13px; font-weight: 550; text-decoration: none; }
+      .nav-links a:hover, footer a:hover { opacity: .58; }
+      .nav-cta { justify-self: end; }
+      .button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid #111; border-radius: 999px; background: #101112; color: #fff; font-size: 13px; font-weight: 550; text-decoration: none; transition: transform .18s ease, background .18s ease; }
+      .button:hover { transform: translateY(-1px); background: #333; }
+      .button svg { width: 16px; height: 16px; }
+      .hero { position: relative; display: flex; min-height: min(900px, 100svh); min-height: max(730px, 100svh); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; margin: 12px; padding: 102px 28px 0; border-radius: 28px; isolation: isolate; background: linear-gradient(180deg, #a8bec0 0%, #d6dad1 56%, #e8d4b5 100%); text-align: center; }
+      .hero::before, .hero::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
+      .hero::before { inset: 0; opacity: .86; background: radial-gradient(ellipse at 7% 78%, #fff1d4 0 8%, transparent 27%), radial-gradient(ellipse at 92% 80%, #fff1d7 0 11%, transparent 31%), radial-gradient(ellipse at 53% 0%, #e8f2f2 0 8%, transparent 35%); }
+      .hero::after { right: -7%; bottom: -47%; width: 65%; aspect-ratio: 1; border-radius: 50%; background: #93b8bd; filter: blur(75px); opacity: .34; }
+      .hero-copy { position: relative; z-index: 2; max-width: 760px; margin-inline: auto; transform: translateY(-85px); }
+      .hero h1 { margin: 0 auto 17px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(58px, 8.1vw, 105px); font-weight: 400; line-height: .98; letter-spacing: -.065em; }
+      .hero h1 em { color: #26393c; font-weight: 400; }
+      .hero-copy > p { max-width: 550px; margin: 0 auto; color: #343a3b; font-size: 16px; line-height: 1.5; }
+      .hero-actions { display: flex; justify-content: center; margin-top: 28px; }
+      .hero .button { min-height: 48px; padding-inline: 24px; }
+      .hero-note { margin: 13px 0 0 !important; color: #42494a !important; font-size: 12px !important; }
+      .hero-stage { position: absolute; right: 0; bottom: 0; left: 0; display: grid; height: 34%; place-items: end center; overflow: hidden; pointer-events: none; }
+      .hero-glow { position: absolute; bottom: -34%; width: min(820px, 80vw); aspect-ratio: 1; border-radius: 50%; background: #f7fcf499; filter: blur(3px); }
+      .hero-window { position: relative; z-index: 1; display: flex; width: min(620px, 75vw); height: 250px; flex-direction: column; padding: 11px; border: 1px solid #ffffffa8; border-bottom: 0; border-radius: 20px 20px 0 0; background: #f8f8f6; box-shadow: 0 20px 65px #273d4030; transform: translateY(95px) rotate(-1.3deg); }
+      .window-bar { display: flex; height: 23px; align-items: center; gap: 6px; padding: 0 4px 9px; color: #7b7d7b; font-size: 9px; font-weight: 600; }
+      .window-dot { width: 7px; height: 7px; border-radius: 50%; background: #fa6257; box-shadow: 11px 0 #f9be4e, 22px 0 #48bf6a; margin-right: 24px; }
+      .window-screen { position: relative; display: grid; flex: 1; place-items: center; overflow: hidden; border-radius: 13px; background: radial-gradient(ellipse at 50% 100%, #6a46ff, #3512b1 62%, #1d0b68); }
+      .window-screen::before, .window-screen::after { position: absolute; width: 210px; height: 210px; border-radius: 50%; background: #ffdf61; content: ""; filter: blur(1px); opacity: .16; }
+      .window-screen::before { top: -105px; left: -35px; }
+      .window-screen::after { right: -65px; bottom: -150px; background: #52ddce; }
+      .hero-icon { position: relative; z-index: 1; width: 144px; height: 144px; border: 5px solid #fff; border-radius: 30px; box-shadow: 0 13px 35px #07052266; transform: rotate(3deg); }
+      .keycap { position: absolute; z-index: 2; display: grid; width: 55px; height: 55px; place-items: center; border: 4px solid #fff; border-radius: 17px; background: #ffdc58; box-shadow: 0 10px 25px #3335; color: #272423; font-size: 23px; transform: rotate(-9deg); }
+      .keycap.one { bottom: 107px; left: calc(50% - 330px); }
+      .keycap.two { right: calc(50% - 325px); bottom: 55px; background: #63ddc1; transform: rotate(8deg); }
+      .section { padding-block: 112px; }
+      .section-title { margin-bottom: 65px; text-align: center; }
+      .section-title h2 { margin-bottom: 12px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(39px, 5vw, 62px); font-weight: 400; line-height: 1.05; letter-spacing: -.055em; }
+      .section-title p { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 15px; }
+      .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+      .story { padding: 94px 0 105px; border-top: 1px solid var(--line); }
+      .story-grid { display: grid; grid-template-columns: minmax(220px, .68fr) minmax(0, 1.32fr); gap: 70px; align-items: start; }
+      .story-tabs { position: sticky; top: 130px; padding: 0 0 0 1px; }
+      .story-tabs h3 { margin: 0 0 24px; color: #8a8d8e; font-size: 13px; font-weight: 500; }
+      .story-tabs a { display: block; margin: 0 0 24px; padding: 0 0 0 17px; border-left: 1px solid transparent; color: #97999a; font-size: 16px; text-decoration: none; transition: color .2s, border-color .2s; }
+      .story-tabs a:hover, .story-tabs a[aria-current="step"] { border-color: #111; color: #111; }
+      .story-tabs a span { display: block; max-width: 260px; margin-top: 5px; color: #777a7d; font-size: 12px; line-height: 1.45; }
+      .story-panels { display: grid; gap: 54px; }
+      .story-panel { min-height: 575px; scroll-margin-top: 100px; }
+      .product-visual { position: relative; display: grid; min-height: 490px; place-items: center; overflow: hidden; border-radius: 18px; background: radial-gradient(ellipse at 50% 30%, #e8f3f2, #d7e3e2 60%, #c0d6d9); }
+      .product-visual::before, .product-visual::after { position: absolute; width: 420px; aspect-ratio: 1; border: 1px solid #ffffff9c; border-radius: 50%; box-shadow: 0 0 0 29px #ffffff30, 0 0 0 58px #ffffff20; content: ""; }
+      .product-visual::before { top: -265px; right: -75px; }
+      .product-visual::after { bottom: -300px; left: -100px; width: 480px; }
+      .demo-window { position: relative; z-index: 1; width: min(83%, 610px); padding: 12px; border: 1px solid #ffffffad; border-radius: 15px; background: #f7f7f6; box-shadow: 0 18px 55px #253e4040; }
+      .demo-titlebar { display: flex; height: 25px; align-items: center; gap: 6px; padding: 0 5px 9px; color: #757879; font-size: 9px; }
+      .demo-lights { width: 7px; height: 7px; border-radius: 50%; background: #fc6155; box-shadow: 11px 0 #fabe4d, 22px 0 #54bf69; margin-right: 25px; }
+      .demo-content { display: grid; min-height: 290px; grid-template-columns: 118px 1fr; overflow: hidden; border: 1px solid #ececeb; border-radius: 9px; background: white; }
+      .demo-sidebar { padding: 13px 9px; border-right: 1px solid #eee; color: #797d7e; font-size: 9px; }
+      .demo-sidebar strong { display: block; margin-bottom: 17px; color: #222; font-size: 10px; }
+      .demo-sidebar span { display: block; margin: 11px 0; }
+      .demo-main { display: flex; flex-direction: column; justify-content: center; padding: 22px; }
+      .demo-main h4 { margin: 0 0 7px; font-size: 17px; font-weight: 600; letter-spacing: -.03em; }
+      .demo-main p { max-width: 330px; margin: 0 0 16px; color: #777a7d; font-size: 10px; }
+      .demo-row { display: flex; align-items: center; gap: 9px; margin-top: 8px; padding: 9px 11px; border: 1px solid #ececeb; border-radius: 7px; color: #4c5052; font-size: 9px; }
+      .demo-icon { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border-radius: 6px; background: #f0edff; color: #5d41df; font-size: 12px; }
+      .demo-row .demo-check { margin-left: auto; color: #54aa79; }
+      .print-screen { position: relative; display: grid; min-height: 290px; place-items: center; overflow: hidden; border-radius: 9px; background: radial-gradient(ellipse at 49% 50%, #5226df, #25097e 74%); }
+      .print-screen img { position: relative; z-index: 1; width: 175px; height: 175px; border: 5px solid #fff; border-radius: 33px; box-shadow: 0 15px 35px #1005368c; transform: rotate(-4deg); }
+      .print-dot { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: #ffdf4f; box-shadow: 0 0 22px #ffdf4f; }
+      .print-dot.a { top: 19%; left: 22%; background: #ff695e; box-shadow: 0 0 28px #ff695e; }
+      .print-dot.b { right: 17%; bottom: 23%; width: 43px; height: 43px; background: #57e0c0; box-shadow: 0 0 28px #57e0c0; }
+      .print-dot.c { top: 21%; right: 27%; width: 15px; height: 15px; }
+      .mapping { width: min(84%, 630px); padding: 30px; border: 1px solid #ffffffa8; border-radius: 16px; background: #ffffffed; box-shadow: 0 18px 55px #253e4030; }
+      .mapping h4 { margin: 0 0 16px; font-size: 15px; }
+      .keyboard { display: grid; gap: 5px; padding: 13px; border: 1px solid #dedfdf; border-radius: 12px; background: #f0f1f0; box-shadow: 0 7px 15px #171a1c1c; }
+      .keyboard-row { display: flex; justify-content: center; gap: 4px; }
+      .keyboard-key { display: grid; min-width: 27px; height: 25px; flex: 1; place-items: center; border: 1px solid #d9dad9; border-radius: 5px; background: #fff; box-shadow: 0 2px 0 #d6d7d7; color: #55595a; font-size: 8px; }
+      .keyboard-key.accent { background: #d8cbff; color: #4527ba; }
+      .keyboard-key.space { flex: 5; }
+      .map-caption { display: flex; justify-content: space-between; margin-top: 15px; color: #777a7d; font-size: 10px; }
+      .unlock-screen { display: grid; min-height: 290px; place-items: center; border-radius: 9px; background: radial-gradient(ellipse at center, #4321b7, #210b70); color: #fff; text-align: center; }
+      .unlock-screen img { width: 92px; height: 92px; margin: 0 auto 14px; border: 4px solid #fff; border-radius: 23px; }
+      .unlock-screen h4 { margin: 0 0 3px; font-size: 17px; }
+      .unlock-screen p { margin: 0 auto 15px; color: #ddd5ff; font-size: 10px; }
+      .unlock-pill { display: inline-flex; padding: 7px 18px; border-radius: 999px; background: #fff; color: #22105e; font-size: 10px; font-weight: 650; }
+      .story-panel-copy { display: none; }
+      .idea { padding: 88px 0 100px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .idea-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+      .idea-title { font-family: Georgia, "Times New Roman", serif; font-size: clamp(38px, 4.8vw, 58px); font-weight: 400; line-height: 1.06; letter-spacing: -.055em; }
+      .idea-copy { max-width: 470px; color: #66696b; font-size: 15px; }
+      .idea-copy p:last-child { margin-bottom: 0; }
+      .idea-note { grid-column: 1 / -1; margin: 24px 0 0; padding: 30px 0 0; border-top: 1px solid var(--line); font-family: Georgia, "Times New Roman", serif; font-size: clamp(24px, 3.3vw, 38px); line-height: 1.18; letter-spacing: -.04em; }
+      .idea-note span { color: #989b9b; }
+      .pricing { padding: 104px 0 0; }
+      .pricing-card { position: relative; display: grid; min-height: 380px; grid-template-columns: 1.1fr .9fr; align-items: center; overflow: hidden; padding: 55px 70px; border: 1px solid #e8eeed; border-radius: 20px; background: linear-gradient(125deg, #f5f7f5, #eaf2f0 65%, #dce9e8); }
+      .pricing-card::after { position: absolute; right: -80px; bottom: -290px; width: 520px; aspect-ratio: 1; border: 1px solid #ffffff; border-radius: 50%; box-shadow: 0 0 0 34px #ffffff55, 0 0 0 68px #ffffff38; content: ""; }
+      .pricing-copy { position: relative; z-index: 1; }
+      .pricing-copy h2 { max-width: 470px; margin: 0 0 14px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(38px, 4.6vw, 56px); font-weight: 400; line-height: 1.02; letter-spacing: -.06em; }
+      .pricing-copy p { max-width: 430px; margin-bottom: 22px; color: #686e6e; font-size: 14px; }
+      .pricing-copy .button { background: #111; }
+      .price-panel { position: relative; z-index: 1; justify-self: end; width: min(100%, 330px); padding: 25px; border: 1px solid #fff; border-radius: 14px; background: #ffffffd9; box-shadow: 0 15px 50px #3b56521a; }
+      .price-panel p { margin: 0; color: #767b7b; font-size: 12px; }
+      .price-panel strong { display: block; margin: 3px 0 11px; font-family: Georgia, "Times New Roman", serif; font-size: 54px; font-weight: 400; letter-spacing: -.06em; }
+      .price-panel ul { display: grid; gap: 9px; margin: 0; padding: 14px 0 0; border-top: 1px solid #e9ebea; list-style: none; color: #515657; font-size: 12px; }
+      .price-panel li::before { margin-right: 9px; color: #398b6a; content: "✓"; }
+      .faq { display: grid; grid-template-columns: .48fr 1.52fr; gap: 65px; padding: 100px 0 110px; }
+      .faq h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 43px; font-weight: 400; letter-spacing: -.055em; }
       .faq-list { border-top: 1px solid var(--line); }
       details { border-bottom: 1px solid var(--line); }
-      summary { position: relative; padding: 18px 35px 18px 0; cursor: pointer; font-size: 15px; font-weight: 720; list-style: none; }
+      summary { position: relative; padding: 20px 35px 20px 0; cursor: pointer; font-size: 14px; font-weight: 520; list-style: none; }
       summary::-webkit-details-marker { display: none; }
-      summary::after { position: absolute; top: 16px; right: 2px; color: var(--purple); font-size: 22px; font-weight: 400; content: "+"; }
+      summary::after { position: absolute; top: 17px; right: 3px; display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; background: #f4f5f4; color: #555; font-size: 15px; content: "+"; }
       details[open] summary::after { content: "−"; }
-      details p { margin: -3px 30px 18px 0; color: var(--muted); font-size: 14px; }
-      .closing { padding-block: 76px 88px; }
-      .closing-card { position: relative; overflow: hidden; padding: 70px 24px; border-radius: 29px; background: linear-gradient(130deg, #e5ddff, #dceaf6 58%, #fff0cf); text-align: center; }
-      .closing-card::after { position: absolute; top: -98px; right: -78px; width: 270px; aspect-ratio: 1; border: 1px solid #fff9; border-radius: 50%; box-shadow: 0 0 0 25px #ffffff45, 0 0 0 50px #ffffff30; content: ""; }
-      .closing-card h2 { position: relative; z-index: 1; max-width: 670px; margin: 0 auto 14px; font-size: clamp(38px, 5.3vw, 59px); line-height: .98; letter-spacing: -.07em; }
-      .closing-card p { position: relative; z-index: 1; margin-bottom: 23px; color: #5c596b; }
-      .closing-card .button { position: relative; z-index: 1; }
-      footer { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px; padding-block: 34px 42px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
-      .footer-brand p { max-width: 220px; margin: 13px 0 0; font-size: 12px; }
-      .footer-column h3 { margin-bottom: 11px; color: var(--ink); font-size: 12px; }
-      .footer-column a { display: block; width: fit-content; margin: 7px 0; text-decoration: none; }
+      details p { max-width: 670px; margin: 0 35px 20px 0; color: var(--muted); font-size: 13px; }
+      .final-cta { padding: 0 0 75px; }
+      .final-card { position: relative; display: flex; min-height: 310px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 48px 28px; border-radius: 20px; background: radial-gradient(ellipse at 15% 10%, #83bbc5 0, transparent 40%), linear-gradient(135deg, #183847, #152d4e 60%, #312b66); color: #fff; text-align: center; }
+      .final-card::after { position: absolute; right: -15%; bottom: -110%; width: 65%; aspect-ratio: 1; border: 1px solid #ffffff42; border-radius: 50%; box-shadow: 0 0 0 34px #ffffff12, 0 0 0 68px #ffffff0c; content: ""; }
+      .final-card h2 { position: relative; z-index: 1; max-width: 650px; margin: 0 0 13px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(40px, 5vw, 60px); font-weight: 400; line-height: 1.03; letter-spacing: -.06em; }
+      .final-card p { position: relative; z-index: 1; max-width: 470px; margin: 0 0 22px; color: #d1d9dd; font-size: 14px; }
+      .final-card .button { position: relative; z-index: 1; border-color: #fff; background: #fff; color: #151515; }
+      footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px; padding: 34px 0 50px; border-top: 1px solid var(--line); }
+      .footer-column h3 { margin: 0 0 13px; color: #85898a; font-size: 12px; font-weight: 500; }
+      .footer-column a { display: block; width: fit-content; margin: 8px 0; font-size: 12px; text-decoration: none; }
+      .footer-bottom { grid-column: 1 / -1; padding-top: 17px; border-top: 1px solid var(--line); color: #999c9c; font-size: 11px; text-align: center; }
       @media (max-width: 760px) {
-        .shell { width: min(100% - 34px, 560px); }
-        .hero-shell { margin: 7px; border-radius: 23px; }
-        .topbar { height: 69px; }
-        nav { gap: 12px; }
-        nav a:not(.button) { display: none; }
-        nav .button { min-height: 40px; padding-inline: 15px; font-size: 12px; }
-        .hero { padding: 54px 17px 0; }
-        h1 { font-size: clamp(53px, 13vw, 78px); }
-        .hero-copy { max-width: 470px; font-size: 16px; }
-        .hero-art { min-height: 297px; margin-top: 34px; }
-        .art-frame { width: 100%; min-height: 262px; border-radius: 22px 22px 0 0; }
-        .art-image { width: 203px; height: 203px; border-width: 6px; border-radius: 28px; }
-        .art-halo { width: 240px; }
-        .art-tag { top: 19px; right: 14px; font-size: 9px; }
-        .art-caption { bottom: 17px; left: 15px; font-size: 10px; }
-        .art-sticker { width: 60px; height: 60px; border-width: 4px; border-radius: 20px; font-size: 27px; }
-        .art-sticker.left { top: 9px; left: 1px; }
-        .art-sticker.right { right: 0; bottom: 9px; width: 56px; height: 56px; border-width: 4px; border-radius: 18px; font-size: 24px; }
-        .section { padding-block: 70px; }
-        .feature-grid, .install-grid, .how, .story, .access-card, .faq-layout { grid-template-columns: 1fr; gap: 15px; }
-        .feature { min-height: 0; }
-        .feature-grid { gap: 11px; }
-        .how { gap: 27px; }
-        .how-art { min-height: 350px; }
-        .mini-window { width: min(79%, 360px); }
-        .mini-screen { min-height: 190px; }
-        .mini-screen img { width: 148px; height: 148px; }
-        .floating-key { top: 33px; right: 14px; width: 59px; height: 59px; border-width: 4px; border-radius: 19px; font-size: 24px; }
-        .floating-note { bottom: 34px; left: 12px; font-size: 11px; }
-        .story { gap: 23px; }
-        .story-mark { width: 91px; height: 91px; border-radius: 28px; font-size: 40px; }
-        .access { padding-block: 55px; }
-        .access-card { gap: 24px; padding: 28px 24px; border-radius: 22px; }
-        .faq-layout { gap: 18px; }
-        .closing { padding-block: 55px 65px; }
-        .closing-card { padding: 54px 20px; border-radius: 23px; }
-        footer { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
-        .footer-brand { grid-column: 1 / -1; }
+        :root { --shell: min(100% - 36px, 560px); }
+        .site-header { height: 64px; }
+        .nav { grid-template-columns: 1fr auto; }
+        .brand { gap: 8px; font-size: 17px; }
+        .brand img { width: 29px; height: 29px; border-radius: 8px; }
+        .nav-links { display: none; }
+        .button { min-height: 40px; padding-inline: 16px; font-size: 12px; }
+        .hero { min-height: max(760px, 100svh); margin: 7px; padding: 88px 20px 0; border-radius: 22px; }
+        .hero h1 { max-width: 520px; font-size: clamp(54px, 12vw, 78px); }
+        .hero-copy { transform: translateY(-72px); }
+        .hero-copy > p { max-width: 410px; font-size: 14px; }
+        .hero-stage { height: 30%; }
+        .hero-window { width: 87vw; height: 215px; transform: translateY(84px) rotate(-1deg); }
+        .hero-icon { width: 118px; height: 118px; border-radius: 25px; }
+        .keycap.one { bottom: 75px; left: 8%; }
+        .keycap.two { right: 8%; bottom: 44px; }
+        .section { padding-block: 75px; }
+        .story { padding: 74px 0; }
+        .story { padding-top: 58px; }
+        .story-grid { display: block; }
+        .story-tabs { position: static; display: flex; gap: 15px; overflow-x: auto; margin: 0 -18px 22px; padding: 0 18px 7px; scrollbar-width: none; }
+        .story-tabs h3 { display: none; }
+        .story-tabs a { min-width: 160px; margin: 0; padding-left: 10px; font-size: 13px; }
+        .story-tabs a span { display: none; }
+        .story-panels { gap: 30px; }
+        .story-panel { min-height: 0; }
+        .story-panel-copy { display: block; padding: 14px 3px 0; }
+        .story-panel-copy h3 { margin: 0 0 4px; font-size: 14px; font-weight: 560; }
+        .story-panel-copy p { margin: 0; color: var(--muted); font-size: 12px; }
+        .product-visual { min-height: 370px; border-radius: 14px; }
+        .demo-window { width: 92%; padding: 8px; }
+        .demo-content { min-height: 245px; grid-template-columns: 88px 1fr; }
+        .demo-sidebar { padding: 11px 7px; font-size: 8px; }
+        .demo-main { padding: 15px 11px; }
+        .demo-main h4 { font-size: 14px; }
+        .demo-main p { font-size: 9px; }
+        .print-screen, .unlock-screen { min-height: 245px; }
+        .print-screen img { width: 140px; height: 140px; }
+        .mapping { width: 94%; padding: 17px 13px; }
+        .keyboard { gap: 3px; padding: 8px; }
+        .keyboard-row { gap: 2px; }
+        .keyboard-key { min-width: 18px; height: 22px; font-size: 6px; }
+        .idea { padding: 70px 0; }
+        .idea-inner { grid-template-columns: 1fr; gap: 12px; }
+        .idea-copy { font-size: 14px; }
+        .idea-quote { margin-top: 18px; padding-top: 22px; }
+        .pricing { padding-top: 75px; }
+        .pricing-card { grid-template-columns: 1fr; gap: 25px; padding: 34px 24px; border-radius: 15px; }
+        .pricing-card::after { right: -45%; bottom: -37%; width: 100%; }
+        .price-panel { justify-self: stretch; width: auto; padding: 20px; }
+        .faq { grid-template-columns: 1fr; gap: 25px; padding: 75px 0; }
+        .faq h2 { font-size: 39px; }
+        .final-cta { padding-bottom: 55px; }
+        .final-card { min-height: 320px; border-radius: 15px; }
+        footer { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+        .footer-column:first-child { grid-column: 1 / -1; }
       }
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        *, *::before, *::after { transition-duration: .01ms !important; }
-      }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
     </style>
   </head>
   <body>
-    <div class="hero-shell" id="top">
-      <header class="shell topbar">
-        <a class="brand" href="#top" aria-label="KeySplash home">
-          <img src="artwork/keysplash-icon.png" alt="">
-          <span>KeySplash</span>
-        </a>
-        <nav aria-label="Main navigation">
-          <a href="#play">Play mode</a>
-          <a href="#setup">Setup</a>
-          <a href="#faq">FAQ</a>
-          <a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download <span aria-hidden="true">↓</span></a>
-        </nav>
-      </header>
-
-      <main>
-        <section class="shell hero" aria-labelledby="hero-title">
-          <p class="eyebrow">A little Mac keyboard break</p>
-          <h1 id="hero-title">Let little hands<br><span>make a splash.</span></h1>
-          <p class="hero-copy">KeySplash is a playful keyboard lock for Mac. It pauses typing while every curious key press leaves a colorful handprint on the screen.</p>
-          <div class="hero-actions">
-            <a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download for macOS <span aria-hidden="true">↓</span></a>
-          </div>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="KeySplash home"><img src="artwork/keysplash-icon.png" alt=""><span>KeySplash</span></a>
+        <ul class="nav-links">
+          <li><a href="#top">Product</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Download</a></li>
+        </ul>
+        <a class="button nav-cta" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download <span aria-hidden="true">↓</span></a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <h1 id="hero-title">A little room<br>for <em>curious hands.</em></h1>
+          <p>KeySplash turns your Mac keyboard into a colorful play space. Little taps make bright handprints while your work stays right where you left it.</p>
+          <div class="hero-actions"><a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip"><span aria-hidden="true">↓</span> Download for macOS</a></div>
           <p class="hero-note">Free · macOS 14 or later · No account or subscription</p>
-          <div class="hero-art" role="img" aria-label="KeySplash colorful handprint app artwork, with playful keyboard-inspired details">
-            <div class="art-halo" aria-hidden="true"></div>
-            <div class="art-frame" aria-hidden="true">
-              <img class="art-image" src="artwork/keysplash-icon.png" alt="">
-              <span class="art-tag">A tiny tap, a bright little moment</span>
-              <span class="art-caption">A keyboard lock made for play</span>
-            </div>
-            <span class="art-sticker left" aria-hidden="true">✦</span>
-            <span class="art-sticker right" aria-hidden="true">⌘</span>
+        </div>
+        <div class="hero-stage" aria-hidden="true">
+          <div class="hero-glow"></div>
+          <span class="keycap one">⌘</span><span class="keycap two">↵</span>
+          <div class="hero-window">
+            <div class="window-bar"><span class="window-dot"></span>KeySplash · Play mode</div>
+            <div class="window-screen"><img class="hero-icon" src="artwork/keysplash-icon.png" alt=""></div>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
 
-    <section class="features section" id="play" aria-labelledby="play-title">
-      <div class="shell">
-        <div class="section-heading">
-          <p class="eyebrow">How KeySplash works</p>
-          <h2 id="play-title">A keyboard break that feels like play.</h2>
-          <p>When a toddler wants to join in, KeySplash turns an everyday Mac keyboard-cleaning moment into a colorful screen adventure.</p>
+      <section class="story shell" id="features" aria-labelledby="story-title">
+        <h2 class="visually-hidden" id="story-title">How KeySplash works</h2>
+        <div class="story-grid">
+          <aside class="story-tabs" aria-label="KeySplash features">
+            <h3>A keyboard break, made playful</h3>
+            <a href="#feature-lock">Keep typing on pause<span>Keys stay out of the app you were using.</span></a>
+            <a href="#feature-prints">Turn keys into handprints<span>Every tap makes a little color on screen.</span></a>
+            <a href="#feature-map">Every key has a place<span>Keyboard position maps across the display.</span></a>
+            <a href="#feature-unlock">Unlock when you are ready<span>End play with Unlock or five Escape presses.</span></a>
+          </aside>
+          <div class="story-panels">
+            <article class="story-panel" id="feature-lock">
+              <div class="product-visual">
+                <div class="demo-window">
+                  <div class="demo-titlebar"><span class="demo-lights"></span>KeySplash · Keyboard access</div>
+                  <div class="demo-content">
+                    <div class="demo-sidebar"><strong>KeySplash</strong><span>Play mode</span><span>Appearance</span><span>Accessibility</span></div>
+                    <div class="demo-main"><h4>A pause for typing</h4><p>Keyboard input is captured while your little one explores. Your open apps stay just as they were.</p><div class="demo-row"><span class="demo-icon">⌨</span>Keyboard input <span class="demo-check">●</span></div><div class="demo-row"><span class="demo-icon">◉</span>Current workspace <span class="demo-check">Protected</span></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="story-panel-copy"><h3>Keep typing on pause</h3><p>KeySplash temporarily captures keyboard input, so curious taps do not get typed into the app you were using.</p></div>
+            </article>
+            <article class="story-panel" id="feature-prints">
+              <div class="product-visual">
+                <div class="demo-window">
+                  <div class="demo-titlebar"><span class="demo-lights"></span>KeySplash · A little keyboard break</div>
+                  <div class="print-screen"><span class="print-dot a"></span><span class="print-dot b"></span><span class="print-dot c"></span><img src="artwork/keysplash-icon.png" alt=""></div>
+                </div>
+              </div>
+              <div class="story-panel-copy"><h3>Turn keys into handprints</h3><p>Colorful handprints vary in size, color, and tilt, with occasional sparkles, bubbles, and confetti.</p></div>
+            </article>
+            <article class="story-panel" id="feature-map">
+              <div class="product-visual">
+                <div class="mapping">
+                  <h4>One keyboard, one big canvas</h4>
+                  <div class="keyboard" aria-hidden="true">
+                    <div class="keyboard-row"><span class="keyboard-key">esc</span><span class="keyboard-key">F1</span><span class="keyboard-key">F2</span><span class="keyboard-key">F3</span><span class="keyboard-key">F4</span><span class="keyboard-key">F5</span><span class="keyboard-key">F6</span><span class="keyboard-key">F7</span><span class="keyboard-key">F8</span><span class="keyboard-key">F9</span></div>
+                    <div class="keyboard-row"><span class="keyboard-key accent">Q</span><span class="keyboard-key">W</span><span class="keyboard-key">E</span><span class="keyboard-key">R</span><span class="keyboard-key">T</span><span class="keyboard-key">Y</span><span class="keyboard-key">U</span><span class="keyboard-key">I</span><span class="keyboard-key">O</span><span class="keyboard-key">P</span></div>
+                    <div class="keyboard-row"><span class="keyboard-key">A</span><span class="keyboard-key">S</span><span class="keyboard-key">D</span><span class="keyboard-key">F</span><span class="keyboard-key">G</span><span class="keyboard-key">H</span><span class="keyboard-key">J</span><span class="keyboard-key">K</span><span class="keyboard-key">L</span></div>
+                    <div class="keyboard-row"><span class="keyboard-key">⇧</span><span class="keyboard-key">Z</span><span class="keyboard-key">X</span><span class="keyboard-key">C</span><span class="keyboard-key">V</span><span class="keyboard-key">B</span><span class="keyboard-key">N</span><span class="keyboard-key">M</span><span class="keyboard-key">⇧</span></div>
+                    <div class="keyboard-row"><span class="keyboard-key">fn</span><span class="keyboard-key">⌃</span><span class="keyboard-key">⌥</span><span class="keyboard-key space"></span><span class="keyboard-key">⌘</span><span class="keyboard-key">⌥</span></div>
+                  </div>
+                  <div class="map-caption"><span>Left side of keyboard</span><span>Right side of screen →</span></div>
+                </div>
+              </div>
+              <div class="story-panel-copy"><h3>Every key has a place</h3><p>Physical key positions map across the whole display, including function keys and the bottom row. ANSI, ISO, and JIS layouts are supported.</p></div>
+            </article>
+            <article class="story-panel" id="feature-unlock">
+              <div class="product-visual">
+                <div class="demo-window">
+                  <div class="demo-titlebar"><span class="demo-lights"></span>KeySplash · Play mode</div>
+                  <div class="unlock-screen"><div><img src="artwork/keysplash-icon.png" alt=""><h4>All done?</h4><p>Your Mac is ready when you are.</p><span class="unlock-pill">Unlock</span></div></div>
+                </div>
+              </div>
+              <div class="story-panel-copy"><h3>Unlock when you are ready</h3><p>Click Unlock or press Escape five times to finish the break and return to your Mac.</p></div>
+            </article>
+          </div>
         </div>
-        <div class="feature-grid">
-          <article class="feature">
-            <div class="feature-icon" aria-hidden="true">⌨️</div>
-            <h3>Keep typing on pause</h3>
-            <p>KeySplash temporarily captures keyboard input, so curious taps do not get typed into the app you were using.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon" aria-hidden="true">🖐️</div>
-            <h3>Turn keys into handprints</h3>
-            <p>Keyboard positions map across the display. Tap different parts of the keyboard to make colorful prints appear around the screen.</p>
-          </article>
-          <article class="feature">
-            <div class="feature-icon" aria-hidden="true">✨</div>
-            <h3>Add a little surprise</h3>
-            <p>Handprints vary in color, size, and tilt, with gentle sounds and occasional sparkles, bubbles, or confetti.</p>
-          </article>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="shell section how" aria-labelledby="how-title">
-      <div class="how-copy">
-        <p class="eyebrow">A simple little flow</p>
-        <h2 id="how-title">From a key press to a screen full of color.</h2>
-        <p>KeySplash keeps setup simple for parents, then lets kids explore the keys at their own pace.</p>
-        <div class="steps">
-          <article class="step">
-            <span class="step-number" aria-hidden="true">01</span>
-            <div><h3>Start a play break</h3><p>Open KeySplash when your child wants a turn at the keyboard.</p></div>
-          </article>
-          <article class="step">
-            <span class="step-number" aria-hidden="true">02</span>
-            <div><h3>Let them tap away</h3><p>Keys become colorful handprints, while typing stays paused.</p></div>
-          </article>
-          <article class="step">
-            <span class="step-number" aria-hidden="true">03</span>
-            <div><h3>Unlock when you are ready</h3><p>Click Unlock or press Escape five times to return to your Mac.</p></div>
-          </article>
+      <section class="idea" aria-labelledby="idea-title">
+        <div class="shell idea-inner">
+          <h2 class="idea-title" id="idea-title">Made for the moment a little one joins your work.</h2>
+          <div class="idea-copy"><p>Our toddler loved coming over to the computer and pressing every key. The original Cleaning Mode solved the practical problem by blocking input, but the blank screen made the computer feel off-limits.</p><p>We wanted that moment to feel more welcoming. KeySplash keeps the keyboard locked and gives curious hands a colorful screen of their own.</p></div>
+          <p class="idea-note">A keyboard break can still feel like <span>being part of the fun.</span></p>
         </div>
-      </div>
-      <div class="how-art" role="img" aria-label="Illustration of the colorful KeySplash app artwork">
-        <div class="mini-window" aria-hidden="true">
-          <div class="mini-top"><span></span>KeySplash · Play mode</div>
-          <div class="mini-screen"><img src="artwork/keysplash-icon.png" alt=""></div>
-          <div class="mini-foot"><span>Keyboard taps</span><span>Colorful handprints</span></div>
-        </div>
-        <span class="floating-key" aria-hidden="true">↵</span>
-        <span class="floating-note" aria-hidden="true">Every key has a place on screen.</span>
-      </div>
-    </section>
+      </section>
 
-    <section class="story-band section" aria-labelledby="story-title">
-      <div class="shell story">
-        <div class="story-mark" aria-hidden="true">🧸</div>
-        <div class="story-copy">
-          <p class="eyebrow">Made by a parent</p>
-          <h2 id="story-title">It started with one very curious toddler.</h2>
-          <p>Our little one loved coming over to the computer and pressing every key. The original Cleaning Mode solved the practical problem by blocking input, but the blank screen made the computer feel off-limits.</p>
-          <p>We wanted that moment to feel more welcoming. KeySplash keeps the keyboard lock and turns the display into a canvas for colorful handprints, so a child can pretend to work while accidental keystrokes stay out of what was open.</p>
+      <section class="pricing shell" id="pricing" aria-labelledby="pricing-title">
+        <div class="pricing-card">
+          <div class="pricing-copy"><h2 id="pricing-title">A little more play. Nothing to sign up for.</h2><p>KeySplash is free to download. No account, subscription, or separate installer. Just a small Mac app for a curious kid and a busy parent.</p><a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download for macOS <span aria-hidden="true">↓</span></a></div>
+          <div class="price-panel"><p>For Mac · macOS 14 or later</p><strong>Free</strong><ul><li>No account or subscription</li><li>Keyboard layouts: ANSI, ISO, and JIS</li><li>Simple Accessibility setup</li><li>Open source on GitHub</li></ul></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="install section" id="setup" aria-labelledby="install-title">
-      <div class="shell">
-        <div class="section-heading">
-          <p class="eyebrow">Ready in a few minutes</p>
-          <h2 id="install-title">Download, open, and set up once.</h2>
-          <p>KeySplash is a ready-to-run Mac app. No Xcode, command line, or separate installer needed.</p>
-        </div>
-        <div class="install-grid">
-          <article class="install-card">
-            <span class="step-number" aria-hidden="true">01</span>
-            <h3>Download the app</h3>
-            <p>Get the latest KeySplash ZIP and open it on your Mac.</p>
-          </article>
-          <article class="install-card">
-            <span class="step-number" aria-hidden="true">02</span>
-            <h3>Move it to Applications</h3>
-            <p>Drag KeySplash.app into Applications, then launch it.</p>
-          </article>
-          <article class="install-card">
-            <span class="step-number" aria-hidden="true">03</span>
-            <h3>Allow keyboard access</h3>
-            <p>Follow the visual setup guide to enable Accessibility access in macOS Settings.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="shell access" aria-labelledby="access-title">
-      <div class="access-card">
-        <div>
-          <p class="eyebrow">One macOS permission</p>
-          <h2 id="access-title">A clear setup for Accessibility access.</h2>
-          <p>macOS requires this permission for apps that capture keyboard input. KeySplash explains the steps and does not lock the keyboard before access is available.</p>
-        </div>
-        <ol class="access-list">
-          <li>In KeySplash, click <strong>Open Accessibility Settings</strong>.</li>
-          <li>Find KeySplash in <strong>System Settings → Privacy &amp; Security → Accessibility</strong> and switch it on. If it is missing, use the add button to choose KeySplash from Applications.</li>
-          <li>Return to KeySplash. It checks access and starts when macOS applies the permission.</li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="faq section" id="faq" aria-labelledby="faq-title">
-      <div class="shell faq-layout">
-        <div class="faq-title">
-          <p class="eyebrow">Good to know</p>
-          <h2 id="faq-title">A few quick answers.</h2>
-        </div>
+      <section class="faq shell" id="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">FAQ</h2>
         <div class="faq-list">
-          <details>
-            <summary>Does KeySplash work on Windows or Linux?</summary>
-            <p>No. KeySplash is a native Mac app and requires macOS 14 or later.</p>
-          </details>
-          <details>
-            <summary>Does it block mouse clicks too?</summary>
-            <p>Clicks outside the on-screen controls are intercepted, so you cannot accidentally interact with other apps during play. Use the Unlock button to end a session with the mouse.</p>
-          </details>
-          <details>
-            <summary>Is KeySplash free?</summary>
-            <p>Yes. Download it from the public GitHub Releases page at no cost. No account or subscription is required.</p>
-          </details>
-          <details>
-            <summary>Does it support different keyboard layouts?</summary>
-            <p>Yes. KeySplash maps physical key positions for ANSI, ISO, and JIS keyboard layouts.</p>
-          </details>
+          <details><summary>Does KeySplash work on Windows or Linux?</summary><p>No. KeySplash is a native Mac app and requires macOS 14 or later.</p></details>
+          <details><summary>Does it block mouse clicks too?</summary><p>Clicks outside the on-screen controls are intercepted, so you cannot accidentally interact with other apps during play. Use the Unlock button to end a session with the mouse.</p></details>
+          <details><summary>Is KeySplash free?</summary><p>Yes. Download it from the public GitHub Releases page at no cost. No account or subscription is required.</p></details>
+          <details><summary>Does it support different keyboard layouts?</summary><p>Yes. KeySplash maps physical key positions for ANSI, ISO, and JIS keyboard layouts.</p></details>
+          <details><summary>Why does KeySplash need Accessibility access?</summary><p>macOS requires this permission for apps that capture keyboard input. KeySplash explains the setup steps and does not lock the keyboard before access is available.</p></details>
+          <details><summary>How do I allow Accessibility access?</summary><p>In KeySplash, choose Open Accessibility Settings. Find KeySplash under System Settings → Privacy &amp; Security → Accessibility and switch it on. If it is missing, use the add button to choose KeySplash from Applications.</p></details>
+          <details><summary>How do I unlock the keyboard?</summary><p>Click Unlock in the on-screen controls or press Escape five times.</p></details>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="shell closing" aria-labelledby="closing-title">
-      <div class="closing-card">
-        <p class="eyebrow">A happier keyboard break</p>
-        <h2 id="closing-title">Give curious little hands a screen of their own.</h2>
-        <p>Download KeySplash for your Mac and turn keyboard taps into colorful play.</p>
-        <a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download for macOS <span aria-hidden="true">↓</span></a>
-      </div>
-    </section>
-
+      <section class="final-cta shell" aria-labelledby="final-title">
+        <div class="final-card"><h2 id="final-title">Let little hands make a splash.</h2><p>A cheerful keyboard break for your Mac, created for the curious kid beside you.</p><a class="button" href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip"><span aria-hidden="true">↓</span> Download KeySplash</a></div>
+      </section>
+    </main>
     <footer class="shell">
-      <div class="footer-brand">
-        <a class="brand" href="#top"><img src="artwork/keysplash-icon.png" alt=""><span>KeySplash</span></a>
-        <p>A playful Mac keyboard lock for curious kids and busy parents.</p>
-      </div>
-      <div class="footer-column">
-        <h3>Explore</h3>
-        <a href="#play">Play mode</a>
-        <a href="#setup">Setup guide</a>
-        <a href="#faq">FAQ</a>
-      </div>
-      <div class="footer-column">
-        <h3>Get KeySplash</h3>
-        <a href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download for Mac</a>
-        <a href="https://github.com/beautyfree/keysplash/releases/latest">All releases</a>
-      </div>
-      <div class="footer-column">
-        <h3>Project</h3>
-        <a href="https://github.com/beautyfree/keysplash">GitHub repository</a>
-        <a href="https://github.com/beautyfree/keysplash/blob/main/LICENSE">GPL-3.0 license</a>
-      </div>
+      <div class="footer-column"><h3>Product</h3><a href="#features">Features</a><a href="#pricing">Download</a><a href="#faq">FAQ</a></div>
+      <div class="footer-column"><h3>KeySplash</h3><a href="https://github.com/beautyfree/keysplash">GitHub repository</a><a href="https://github.com/beautyfree/keysplash/releases/latest">All releases</a><a href="https://github.com/beautyfree/keysplash/blob/main/LICENSE">GPL-3.0 license</a></div>
+      <div class="footer-column"><h3>Made for Mac</h3><a href="#top">A playful keyboard lock for kids</a><a href="https://github.com/beautyfree/keysplash/issues">Questions and feedback</a></div>
+      <div class="footer-bottom">© 2026 KeySplash · A little keyboard break for curious kids and busy parents</div>
     </footer>
+    <script>
+      const header = document.getElementById("site-header");
+      const setHeader = () => header.classList.toggle("scrolled", window.scrollY > 30);
+      setHeader();
+      window.addEventListener("scroll", setHeader, { passive: true });
+      const featureLinks = [...document.querySelectorAll(".story-tabs a")];
+      const featureSections = featureLinks.map(link => document.querySelector(link.getAttribute("href")));
+      const setActiveFeature = () => {
+        const marker = window.innerHeight * 0.45;
+        const activeIndex = featureSections.findIndex(section => {
+          const bounds = section.getBoundingClientRect();
+          return bounds.top <= marker && bounds.bottom >= marker;
+        });
+        if (activeIndex < 0) return;
+        featureLinks.forEach((link, index) => {
+          if (index === activeIndex) link.setAttribute("aria-current", "step");
+          else link.removeAttribute("aria-current");
+        });
+      };
+      setActiveFeature();
+      window.addEventListener("scroll", setActiveFeature, { passive: true });
+    </script>
   </body>
 </html>
