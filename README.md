@@ -6,6 +6,8 @@
 
 <p align="center">A playful macOS keyboard lock for little hands and curious kids.</p>
 
+<p align="center"><a href="https://beautyfree.github.io/keysplash/">Visit the KeySplash website</a> · <a href="https://github.com/beautyfree/keysplash/releases/latest/download/KeySplash-macOS.zip">Download for macOS</a></p>
+
 KeySplash turns keyboard-cleaning mode into a tiny screen adventure. It temporarily blocks keyboard input while colorful, oversized handprints appear where the keys are pressed. The screen stays transparent, so your child can pretend to work while your apps are protected from accidental keystrokes.
 
 ## Install KeySplash

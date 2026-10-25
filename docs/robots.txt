@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://beautyfree.github.io/keysplash/sitemap.xml
