@@ -871,11 +871,16 @@ private struct CleaningOverlayView: View {
                 }
                 VStack(spacing: 15) {
                     Image(systemName: "keyboard").font(.system(size: 34)).foregroundStyle(.white.opacity(0.8))
+                        .shadow(color: .black.opacity(0.85), radius: 3, y: 1)
                     Text("Keyboard playtime!").font(.system(size: 22, weight: .semibold)).foregroundStyle(.white)
-                    Text("Tap keys to make colorful handprints").font(.system(size: 14)).foregroundStyle(.white.opacity(0.72))
+                        .shadow(color: .black.opacity(0.9), radius: 3, y: 1)
+                    Text("Tap keys to make colorful handprints").font(.system(size: 14)).foregroundStyle(.white.opacity(0.82))
+                        .shadow(color: .black.opacity(0.9), radius: 3, y: 1)
                     HStack(spacing: 9) {
                         ForEach(0..<CleaningModeManager.threshold, id: \.self) { i in
-                            Circle().fill(i < manager.unlockProgress ? .white : .white.opacity(0.2)).frame(width: 10, height: 10)
+                            Circle().fill(i < manager.unlockProgress ? .white : .white.opacity(0.2))
+                                .frame(width: 10, height: 10)
+                                .shadow(color: .black.opacity(0.9), radius: 6, y: 2)
                         }
                     }
                     Button("Unlock") { manager.requestUnlockFromButton() }
@@ -883,12 +888,14 @@ private struct CleaningOverlayView: View {
                         .foregroundStyle(.black)
                         .padding(.horizontal, 24).padding(.vertical, 10)
                         .background(.white, in: Capsule())
+                        .shadow(color: .black.opacity(0.5), radius: 12, y: 4)
                         .buttonStyle(.plain)
                         .padding(.top, 5)
                     HStack(spacing: 10) {
                         Text("or press Esc five times")
                             .font(.system(size: 12))
-                            .foregroundStyle(.white.opacity(0.58))
+                            .foregroundStyle(.white.opacity(0.82))
+                            .shadow(color: .black.opacity(0.9), radius: 3, y: 1)
                         Button { manager.toggleSound() } label: {
                             Image(systemName: manager.soundEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
                                 .font(.system(size: 13, weight: .semibold))
@@ -902,12 +909,6 @@ private struct CleaningOverlayView: View {
                 .frame(maxWidth: 400)
                 .padding(.horizontal, 28)
                 .padding(.vertical, 24)
-                .background(.black.opacity(0.58), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .strokeBorder(.white.opacity(0.12), lineWidth: 1)
-                }
-                .shadow(color: .black.opacity(0.2), radius: 24, y: 8)
                 .frame(width: 456, height: 320)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             }

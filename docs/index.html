@@ -110,6 +110,7 @@
       .product-visual::before { top: -265px; right: -75px; }
       .product-visual::after { bottom: -300px; left: -100px; width: 480px; }
       .demo-window { position: relative; z-index: 1; width: min(83%, 610px); padding: 12px; border: 1px solid #ffffffad; border-radius: 15px; background: #f7f7f6; box-shadow: 0 18px 55px #253e4040; }
+      .play-demo-visual { padding: 28px; }
       .demo-titlebar { display: flex; height: 25px; align-items: center; gap: 6px; padding: 0 5px 9px; color: #757879; font-size: 9px; }
       .demo-lights { width: 7px; height: 7px; border-radius: 50%; background: #fc6155; box-shadow: 11px 0 #fabe4d, 22px 0 #54bf69; margin-right: 25px; }
       .demo-content { display: grid; min-height: 290px; grid-template-columns: 118px 1fr; overflow: hidden; border: 1px solid #ececeb; border-radius: 9px; background: white; }
@@ -122,12 +123,7 @@
       .demo-row { display: flex; align-items: center; gap: 9px; margin-top: 8px; padding: 9px 11px; border: 1px solid #ececeb; border-radius: 7px; color: #4c5052; font-size: 9px; }
       .demo-icon { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border-radius: 6px; background: #f0edff; color: #5d41df; font-size: 12px; }
       .demo-row .demo-check { margin-left: auto; color: #54aa79; }
-      .print-screen { position: relative; display: grid; min-height: 290px; place-items: center; overflow: hidden; border-radius: 9px; background: radial-gradient(ellipse at 49% 50%, #5226df, #25097e 74%); }
-      .print-screen img { position: relative; z-index: 1; width: 175px; height: 175px; border: 5px solid #fff; border-radius: 33px; box-shadow: 0 15px 35px #1005368c; transform: rotate(-4deg); }
-      .print-dot { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: #ffdf4f; box-shadow: 0 0 22px #ffdf4f; }
-      .print-dot.a { top: 19%; left: 22%; background: #ff695e; box-shadow: 0 0 28px #ff695e; }
-      .print-dot.b { right: 17%; bottom: 23%; width: 43px; height: 43px; background: #57e0c0; box-shadow: 0 0 28px #57e0c0; }
-      .print-dot.c { top: 21%; right: 27%; width: 15px; height: 15px; }
+      .play-demo-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; background: #f1f0ec; box-shadow: 0 18px 48px #253e4033; object-fit: cover; }
       .mapping { width: min(84%, 630px); padding: 30px; border: 1px solid #ffffffa8; border-radius: 16px; background: #ffffffed; box-shadow: 0 18px 55px #253e4030; }
       .mapping h4 { margin: 0 0 16px; font-size: 15px; }
       .keyboard { display: grid; gap: 5px; padding: 13px; border: 1px solid #dedfdf; border-radius: 12px; background: #f0f1f0; box-shadow: 0 7px 15px #171a1c1c; }
@@ -211,6 +207,7 @@
         .story-panel-copy h3 { margin: 0 0 4px; font-size: 14px; font-weight: 560; }
         .story-panel-copy p { margin: 0; color: var(--muted); font-size: 12px; }
         .product-visual { min-height: 370px; border-radius: 14px; }
+        .play-demo-visual { min-height: 0; padding: 12px; }
         .demo-window { width: 92%; padding: 8px; }
         .demo-content { min-height: 245px; grid-template-columns: 88px 1fr; }
         .demo-sidebar { padding: 11px 7px; font-size: 8px; }
@@ -296,11 +293,11 @@
               <div class="story-panel-copy"><h3>Keep typing on pause</h3><p>KeySplash temporarily captures keyboard input, so curious taps do not get typed into the app you were using.</p></div>
             </article>
             <article class="story-panel" id="feature-prints">
-              <div class="product-visual">
-                <div class="demo-window">
-                  <div class="demo-titlebar"><span class="demo-lights"></span>KeySplash · A little keyboard break</div>
-                  <div class="print-screen"><span class="print-dot a"></span><span class="print-dot b"></span><span class="print-dot c"></span><img src="artwork/keysplash-icon.png" alt=""></div>
-                </div>
+              <div class="product-visual play-demo-visual">
+                <video class="play-demo-video" controls autoplay muted loop playsinline preload="metadata" poster="media/keysplash-play-demo.gif" aria-label="KeySplash play mode demo: colorful handprints appear as keys are tapped">
+                  <source src="media/keysplash-play-demo.mp4" type="video/mp4">
+                  Your browser does not support embedded video. <a href="media/keysplash-play-demo.mp4">Watch the KeySplash play mode demo.</a>
+                </video>
               </div>
               <div class="story-panel-copy"><h3>Turn keys into handprints</h3><p>Colorful handprints vary in size, color, and tilt, with occasional sparkles, bubbles, and confetti.</p></div>
             </article>

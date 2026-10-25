@@ -10,6 +10,14 @@
 
 KeySplash turns keyboard-cleaning mode into a tiny screen adventure. It temporarily blocks keyboard input while colorful, oversized handprints appear where the keys are pressed. The screen stays transparent, so your child can pretend to work while your apps are protected from accidental keystrokes.
 
+## See KeySplash in play mode
+
+<p align="center"><img src="docs/media/keysplash-play-demo.gif" width="800" alt="KeySplash play mode showing colorful handprints appear across a workspace as keys are pressed"></p>
+
+<p align="center"><a href="docs/media/keysplash-play-demo.mp4">Watch the MP4 demo</a></p>
+
+The play-mode scene uses KeySplash's handprint artwork and on-screen controls over a sample workspace.
+
 ## Install KeySplash
 
 1. Download **KeySplash-macOS.zip** from the [latest release](https://github.com/beautyfree/keysplash/releases/latest).
@@ -65,3 +73,5 @@ The app bundle is assembled with its app icon and handprint artwork by `build-ap
 - `APP_STORE_CONNECT_ISSUER_ID`
 
 See [LICENSE](LICENSE) for license terms.
+
+To regenerate the landing demo media, run `swift scripts/generate-demo-media.swift` with FFmpeg installed.
