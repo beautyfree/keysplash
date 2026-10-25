@@ -989,7 +989,6 @@ private struct Handprint: View {
                 .foregroundStyle(color)
                 .scaledToFit()
                 .shadow(color: color.opacity(0.45), radius: 16)
-                .blendMode(.screen)
         }
     }
 }

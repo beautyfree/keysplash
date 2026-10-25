@@ -8,13 +8,13 @@ let artwork = root.appendingPathComponent("artifacts/handprint-options.png")
 let output = root.appendingPathComponent("docs/media")
 let width = 1280
 let height = 720
-let screenScale: CGFloat = 0.62
+let screenScale: CGFloat = 0.89
 let frameRate = 24
 let frameCount = 192
 let duration = Double(frameCount) / Double(frameRate)
 let palette: [NSColor] = [
     NSColor(hex: 0xFF477E), NSColor(hex: 0x2FD6C5), NSColor(hex: 0xFFD34D),
-    NSColor(hex: 0x9B6CFF), NSColor(hex: 0xFF8D49), NSColor(hex: 0x55A9FF)
+    NSColor(hex: 0x9B6CFF), NSColor(hex: 0x34C759), NSColor(hex: 0xFF8D49), NSColor(hex: 0x55A9FF)
 ]
 
 guard let sheetSource = CGImageSourceCreateWithURL(artwork as CFURL, nil),
@@ -69,12 +69,12 @@ guard handprints.count == 4, handprints.allSatisfy({ $0.count == palette.count }
 }
 
 let keys: [(time: Double, x: CGFloat, y: CGFloat, hand: Int, color: Int)] = [
-    (0.25, 0.12, 0.16, 0, 0), (0.72, 0.28, 0.25, 2, 2), (1.15, 0.43, 0.38, 0, 1),
+    (0.00, 0.12, 0.16, 0, 0), (0.72, 0.28, 0.25, 2, 2), (1.15, 0.43, 0.38, 0, 1),
     (1.50, 0.67, 0.28, 2, 3), (1.86, 0.84, 0.43, 0, 4), (2.25, 0.22, 0.58, 2, 5),
-    (2.58, 0.75, 0.60, 0, 2), (2.91, 0.37, 0.82, 2, 0), (3.26, 0.64, 0.84, 0, 3),
+    (2.58, 0.75, 0.60, 0, 2), (2.91, 0.37, 0.82, 2, 0), (3.26, 0.64, 0.84, 0, 6),
     (3.63, 0.17, 0.39, 2, 4), (3.91, 0.31, 0.47, 0, 1), (4.18, 0.45, 0.40, 2, 2),
     (4.43, 0.58, 0.47, 0, 5), (4.68, 0.72, 0.40, 2, 0), (5.04, 0.86, 0.58, 0, 3),
-    (5.40, 0.10, 0.78, 2, 1), (5.78, 0.91, 0.20, 0, 4), (6.12, 0.50, 0.91, 2, 2)
+    (5.40, 0.10, 0.78, 2, 1), (5.78, 0.91, 0.20, 0, 6), (6.12, 0.50, 0.91, 2, 2)
 ]
 
 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
@@ -117,37 +117,9 @@ runFFmpeg([
 print("Created \(movieURL.path) and \(gifURL.path) (\(String(format: "%.1f", duration)) seconds)")
 
 func drawBackdrop() {
-    NSColor(hex: 0xF1F0EC).setFill()
-    NSBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: height)).fill()
-    fillRounded(CGRect(x: 55, y: 46, width: 1170, height: 628), color: NSColor(hex: 0xFFFFFF), radius: 18)
-    fillRounded(CGRect(x: 55, y: 626, width: 1170, height: 48), color: NSColor(hex: 0xF8F8F6), radius: 18)
-    for (index, color) in [0xFC6155, 0xF9BE4D, 0x54BF69].enumerated() {
-        NSColor(hex: color).setFill()
-        NSBezierPath(ovalIn: CGRect(x: 76 + index * 21, y: 643, width: 11, height: 11)).fill()
-    }
-    drawText("A small space for big ideas", at: CGPoint(x: 160, y: 642), size: 15,
-             color: NSColor(hex: 0x707675), weight: .medium)
-    fillRounded(CGRect(x: 55, y: 46, width: 190, height: 582), color: NSColor(hex: 0xF8F8F6), radius: 0)
-    drawText("Today", at: CGPoint(x: 84, y: 570), size: 16, color: NSColor(hex: 0x25292A), weight: .semibold)
-    ["A little note", "Things to remember", "Weekend ideas"].enumerated().forEach { index, title in
-        let y = 518 - index * 51
-        fillRounded(CGRect(x: 72, y: y - 11, width: 154, height: 38),
-                    color: index == 0 ? NSColor(hex: 0xE9E6FF) : NSColor(hex: 0xF8F8F6), radius: 8)
-        drawText(title, at: CGPoint(x: 86, y: y), size: 11,
-                 color: NSColor(hex: index == 0 ? 0x5038C9 : 0x707675), weight: .medium)
-    }
-    drawText("A little room for curious hands", at: CGPoint(x: 316, y: 536), size: 34,
-             color: NSColor(hex: 0x25292A), weight: .semibold)
-    drawText("A colorful place to explore while your work stays just where you left it.",
-             at: CGPoint(x: 318, y: 500), size: 15, color: NSColor(hex: 0x7C8281), weight: .regular)
-    for index in 0..<5 {
-        fillRounded(CGRect(x: 318, y: 432 - index * 32, width: 630 - (index % 3) * 75, height: 7),
-                    color: NSColor(hex: 0xE9E9E6), radius: 4)
-    }
-    fillRounded(CGRect(x: 990, y: 330, width: 175, height: 145), color: NSColor(hex: 0xF7F3E8), radius: 14)
-    drawText("Little moments", at: CGPoint(x: 1009, y: 441), size: 12, color: NSColor(hex: 0x84795C), weight: .medium)
-    drawText("are big things", at: CGPoint(x: 1009, y: 413), size: 17, color: NSColor(hex: 0x645A43), weight: .semibold)
-    drawText("to little hands.", at: CGPoint(x: 1009, y: 388), size: 14, color: NSColor(hex: 0x84795C), weight: .regular)
+    let canvas = CGRect(x: 0, y: 0, width: width, height: height)
+    NSColor(hex: 0xE8EFED).setFill()
+    NSBezierPath(rect: canvas).fill()
 }
 
 func drawMarks(at time: Double) {
@@ -155,7 +127,7 @@ func drawMarks(at time: Double) {
         let age = time - key.time
         guard age >= 0, age < 2.4 else { continue }
         let burst = keys.enumerated().filter { $0.offset <= index && time - $0.element.time < 2 }.count
-        let size = CGFloat([205, 255, 175, 235, 195, 270, 180, 245, 220][index % 9])
+        let size = CGFloat([220, 330, 185, 280, 245, 315, 195, 300, 265][index % 9])
             * screenScale * (1 + CGFloat(min(max(burst - 1, 0), 6)) * 0.11)
         let fade = age > 2.05 ? max(0, 1 - (age - 2.05) / 0.35) : 1
         let rect = CGRect(x: key.x * CGFloat(width) - size / 2,
@@ -169,7 +141,13 @@ func drawMarks(at time: Double) {
         transform.concat()
         let handIndex = (key.x < 0.5 ? 1 : 0) + (key.hand == 2 ? 2 : 0)
         let image = NSImage(cgImage: handprints[handIndex][key.color], size: rect.size)
+        let handShadow = NSShadow()
+        handShadow.shadowColor = palette[key.color].withAlphaComponent(0.45)
+        handShadow.shadowBlurRadius = 16 * screenScale
+        handShadow.shadowOffset = .zero
+        handShadow.set()
         image.draw(in: rect, from: .zero, operation: .sourceOver, fraction: fade)
+        NSShadow().set()
         NSGraphicsContext.restoreGraphicsState()
         if burst >= 3 && age < 1.2 { drawSparkles(around: CGPoint(x: rect.midX, y: rect.midY), size: size, seed: index) }
     }
@@ -200,12 +178,12 @@ func drawSparkles(around center: CGPoint, size: CGFloat, seed: Int) {
 
 func drawControls() {
     let scale = screenScale
-    let panelSize = CGSize(width: 456 * scale, height: 324 * scale)
+    let panelSize = CGSize(width: 456 * scale, height: 320 * scale)
     let panel = CGRect(x: (CGFloat(width) - panelSize.width) / 2,
                        y: (CGFloat(height) - panelSize.height) / 2,
                        width: panelSize.width, height: panelSize.height)
-    let icon = CGRect(x: CGFloat(width) / 2 - 12 * scale,
-                      y: panel.minY + 260 * scale, width: 24 * scale, height: 24 * scale)
+    let icon = CGRect(x: CGFloat(width) / 2 - 17 * scale,
+                      y: panel.minY + 260 * scale, width: 34 * scale, height: 24 * scale)
     NSColor.white.withAlphaComponent(0.84).setStroke()
     let keyboard = NSBezierPath(roundedRect: icon, xRadius: 3 * scale, yRadius: 3 * scale)
     keyboard.lineWidth = 1.6 * scale
@@ -225,8 +203,8 @@ func drawControls() {
     drawCentered("Tap keys to make colorful handprints", y: panel.minY + 192 * scale, size: 14 * scale,
                  color: NSColor.white.withAlphaComponent(0.9), weight: .regular, withContrast: true)
     for index in 0..<5 {
-        NSColor.white.withAlphaComponent(index == 0 ? 0.88 : 0.24).setFill()
-        let dot = NSBezierPath(ovalIn: CGRect(x: CGFloat(width) / 2 + (-27 + CGFloat(index) * 25) * scale,
+        NSColor.white.withAlphaComponent(0.2).setFill()
+        let dot = NSBezierPath(ovalIn: CGRect(x: CGFloat(width) / 2 + (-43 + CGFloat(index) * 19) * scale,
                                              y: panel.minY + 158 * scale,
                                              width: 10 * scale, height: 10 * scale))
         let dotShadow = NSShadow()
@@ -237,8 +215,8 @@ func drawControls() {
         dot.fill()
         NSShadow().set()
     }
-    let unlock = CGRect(x: CGFloat(width) / 2 - 70 * scale, y: panel.minY + 100 * scale,
-                        width: 140 * scale, height: 42 * scale)
+    let unlock = CGRect(x: CGFloat(width) / 2 - 47 * scale, y: panel.minY + 101 * scale,
+                        width: 94 * scale, height: 38 * scale)
     let unlockShadow = NSShadow()
     unlockShadow.shadowColor = NSColor.black.withAlphaComponent(0.5)
     unlockShadow.shadowBlurRadius = 12 * scale
@@ -246,9 +224,48 @@ func drawControls() {
     unlockShadow.set()
     fillRounded(unlock, color: NSColor.white, radius: 21 * scale)
     NSShadow().set()
-    drawCentered("Unlock", y: panel.minY + 108 * scale, size: 14 * scale, color: NSColor(hex: 0x17191B), weight: .semibold)
-    drawCentered("or press Esc five times", y: panel.minY + 68 * scale, size: 12 * scale,
-                 color: NSColor.white.withAlphaComponent(0.9), weight: .regular, withContrast: true)
+    drawCentered("Unlock", y: panel.minY + 111 * scale, size: 14 * scale, color: NSColor(hex: 0x17191B), weight: .semibold)
+    drawUnlockHint(y: panel.minY + 68 * scale, scale: scale)
+}
+
+func drawUnlockHint(y: CGFloat, scale: CGFloat) {
+    let font = NSFont.systemFont(ofSize: 12 * scale)
+    let shadow = NSShadow()
+    shadow.shadowColor = NSColor.black.withAlphaComponent(0.88)
+    shadow.shadowBlurRadius = 3 * scale
+    shadow.shadowOffset = CGSize(width: 0, height: -1 * scale)
+    let text = NSAttributedString(string: "or press Esc five times", attributes: [
+        .font: font,
+        .foregroundColor: NSColor.white.withAlphaComponent(0.82),
+        .shadow: shadow
+    ])
+    let iconSize = 13 * scale
+    let gap = 10 * scale
+    let x = (CGFloat(width) - text.size().width - gap - iconSize) / 2
+    text.draw(at: CGPoint(x: x, y: y))
+
+    let icon = CGRect(x: x + text.size().width + gap, y: y - 1 * scale,
+                      width: iconSize, height: iconSize)
+    let speaker = NSBezierPath()
+    speaker.move(to: CGPoint(x: icon.minX, y: icon.minY + icon.height * 0.32))
+    speaker.line(to: CGPoint(x: icon.minX + icon.width * 0.28, y: icon.minY + icon.height * 0.32))
+    speaker.line(to: CGPoint(x: icon.minX + icon.width * 0.58, y: icon.minY))
+    speaker.line(to: CGPoint(x: icon.minX + icon.width * 0.58, y: icon.maxY))
+    speaker.line(to: CGPoint(x: icon.minX + icon.width * 0.28, y: icon.minY + icon.height * 0.68))
+    speaker.line(to: CGPoint(x: icon.minX, y: icon.minY + icon.height * 0.68))
+    speaker.close()
+    NSColor.white.withAlphaComponent(0.78).setFill()
+    speaker.fill()
+    NSColor.white.withAlphaComponent(0.78).setStroke()
+
+    for radius in [icon.width * 0.3, icon.width * 0.52] {
+        let wave = NSBezierPath()
+        wave.appendArc(withCenter: CGPoint(x: icon.minX + icon.width * 0.56, y: icon.midY),
+                       radius: radius, startAngle: -50, endAngle: 50, clockwise: false)
+        wave.lineWidth = 1.2 * scale
+        wave.lineCapStyle = .round
+        wave.stroke()
+    }
 }
 
 func fillRounded(_ rect: CGRect, color: NSColor, radius: CGFloat) {
@@ -267,10 +284,6 @@ func drawCentered(_ text: String, y: CGFloat, size: CGFloat, color: NSColor, wei
     }
     let string = NSAttributedString(string: text, attributes: attributes)
     string.draw(at: CGPoint(x: (CGFloat(width) - string.size().width) / 2, y: y))
-}
-
-func drawText(_ text: String, at point: CGPoint, size: CGFloat, color: NSColor, weight: NSFont.Weight) {
-    NSAttributedString(string: text, attributes: [.font: NSFont.systemFont(ofSize: size, weight: weight), .foregroundColor: color]).draw(at: point)
 }
 
 func runFFmpeg(_ arguments: [String]) {
