@@ -30,7 +30,7 @@ KeySplash is a ready-to-run macOS app; you do not need Xcode or a separate insta
 
 KeySplash began with a familiar parent problem: a little one reaches the computer and enthusiastically presses every key. The original Cleaning Mode solved the practical part by blocking keyboard input behind a quiet, dark screen. We liked how simple it was, but wanted the moment to feel like play instead of a forbidden computer.
 
-So we kept the keyboard lock and made the display a canvas. Each key maps to its physical place on the screen; presses leave large, colorful handprints in varied sizes and angles. Repeated tapping adds a little extra flourish. The result is a child-friendly keyboard-cleaning mode that lets kids explore the keyboard while reducing accidental typing in whatever was open.
+So we kept the keyboard lock and made the display a canvas. Each key maps to its physical place on the screen; presses leave large, colorful handprints in varied sizes and angles. Repeated presses grow that key’s existing handprint while it remains visible. The result is a child-friendly keyboard-cleaning mode that lets kids explore the keyboard while reducing accidental typing in whatever was open.
 
 KeySplash is inspired by the Cleaning Mode in [Vorssaint’s vorssaint-utils](https://github.com/vorssaint/vorssaint-utils). The keyboard lock, Escape unlock gesture, and mouse-unlock behavior are adapted under GPL-3.0-or-later; the handprint play layer and KeySplash interface make it our own macOS app.
 
@@ -49,8 +49,8 @@ You can also click **Check Access** after enabling the switch. KeySplash keeps t
 - Covers every display with a transparent overlay; key positions are mapped across the full keyboard and screen.
 - Supports ANSI, ISO, and JIS physical keyboard layouts.
 - Shows randomized left- and right-hand prints with varied colors, sizes, and tilt.
-- Makes every handprint in a quick key flurry grow together, even when each press is a different key.
-- Varies the sparkles and occasionally sends bubbles, confetti, or a little comet drifting across the screen during quiet moments.
+- Grows each key’s own visible handprint independently on repeated presses and refreshes its fade timer.
+- Animates the handprints with springy growth and a gentle fade.
 - Plays short, gentle notes; use the speaker button to mute them.
 - Unlocks when you click **Unlock** or press **Escape** five times.
 - Keeps macOS Force Quit available as an emergency exit.

@@ -45,13 +45,12 @@ final class CleaningModeManager: ObservableObject {
     fileprivate static let threshold = 5
     private static let pressWindow: TimeInterval = 6
     private static let releaseWaitLimit: TimeInterval = 5
-    private static let burstWindow: TimeInterval = 2.0
-    private static let maximumBurstLevel = 7
+    private static let markLifetime: TimeInterval = 2.4
+    private static let maximumPressCount = 7
     private static let systemDefinedEventType = CGEventType(rawValue: 14)!
 
     @Published private(set) var unlockProgress = 0
     @Published private(set) var marks: [SplashMark] = []
-    @Published private(set) var ambientEffects: [AmbientEffect] = []
     @Published private(set) var returnedFromSettings = false
     @Published private(set) var setupStatus = "KeySplash needs Accessibility access to capture keyboard input while play mode is active."
 
@@ -65,12 +64,6 @@ final class CleaningModeManager: ObservableObject {
     private var unlockPending = false
     private var unlockDeadline: DispatchWorkItem?
     private var nextMarkID = 0
-    private var nextAmbientEffectID = 0
-    private var activeBurstMarkIDs: Set<Int> = []
-    private var burstLevel = 0
-    private var lastStampTime: TimeInterval = 0
-    private var nextAmbientEventTime: TimeInterval = 0
-    private var ambientTask: Task<Void, Never>?
     private var permissionCheckTask: Task<Void, Never>?
     private var setupWindow: NSWindow?
     private var waitingForSettingsReturn = false
@@ -98,7 +91,6 @@ final class CleaningModeManager: ObservableObject {
         setupWindow?.orderOut(nil)
         installScreenObserver()
         showOverlays()
-        startAmbientEvents()
     }
 
     func applicationDidBecomeActive() {
@@ -333,8 +325,6 @@ final class CleaningModeManager: ObservableObject {
         unlockDeadline?.cancel()
         unlockDeadline = nil
         unlockPending = false
-        ambientTask?.cancel()
-        ambientTask = nil
         if let tap { CGEvent.tapEnable(tap: tap, enable: false); CFMachPortInvalidate(tap) }
         NSApp.presentationOptions = []
         if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
@@ -348,76 +338,45 @@ final class CleaningModeManager: ObservableObject {
     }
 
     private func addMark(for keyCode: Int64, keyboardType: Int64) {
-        let point = KeyboardPosition.point(for: keyCode, keyboardType: keyboardType)
         let now = ProcessInfo.processInfo.systemUptime
-        let continuesBurst = now - lastStampTime <= Self.burstWindow && !activeBurstMarkIDs.isEmpty
-        if continuesBurst {
-            burstLevel = min(burstLevel + 1, Self.maximumBurstLevel)
+        let deadline = now + Self.markLifetime
+        marks.removeAll { $0.expiresAt <= now }
+        let id: Int
+        let pressCount: Int
+        if let index = marks.firstIndex(where: { $0.keyCode == keyCode }) {
+            id = marks[index].id
+            pressCount = min(marks[index].pressCount + 1, Self.maximumPressCount)
             withAnimation(.spring(response: 0.38, dampingFraction: 0.68)) {
-                for index in marks.indices where activeBurstMarkIDs.contains(marks[index].id) {
-                    marks[index].flurryLevel = burstLevel
-                    marks[index].size = min(marks[index].baseSize * burstScale, 540)
-                    if burstLevel == 3 || burstLevel == 5 {
-                        marks[index].particles += makeFlurryParticles(color: marks[index].color,
-                                                                       count: Int.random(in: 2...4))
-                    }
-                }
+                marks[index].pressCount = pressCount
+                marks[index].size = min(marks[index].baseSize * (1 + CGFloat(pressCount - 1) * 0.11), 540)
+                marks[index].expiresAt = deadline
             }
         } else {
-            activeBurstMarkIDs.removeAll()
-            burstLevel = 1
+            let point = KeyboardPosition.point(for: keyCode, keyboardType: keyboardType)
+            let isLeftSide = point.x <= 0.5
+            let baseSize = CGFloat.random(in: 155...330)
+            nextMarkID += 1
+            id = nextMarkID
+            pressCount = 1
+            withAnimation(.spring(response: 0.38, dampingFraction: 0.68)) {
+                marks.append(SplashMark(id: id, keyCode: keyCode,
+                                       x: min(max(point.x + CGFloat.random(in: -0.012...0.012), 0), 1),
+                                       y: min(max(point.y + CGFloat.random(in: -0.012...0.012), 0), 1),
+                                       color: colors.randomElement() ?? .pink,
+                                       imageIndex: Int.random(in: 0...1) * 2 + (isLeftSide ? 1 : 0),
+                                       baseSize: baseSize, size: baseSize,
+                                       heightScale: CGFloat.random(in: 0.76...1.12),
+                                       rotation: Double.random(in: -36...36),
+                                       pressCount: pressCount, expiresAt: deadline))
+            }
         }
-        lastStampTime = now
-        nextAmbientEventTime = now + Double.random(in: 9...15)
-        let isLeftSide = point.x <= 0.5
-        let imageIndex = Int.random(in: 0...1) * 2 + (isLeftSide ? 1 : 0)
-        let color = colors.randomElement() ?? .pink
-        nextMarkID += 1
-        let id = nextMarkID
-        let baseSize = CGFloat.random(in: 155...330)
-        let particles = burstLevel >= 3
-            ? makeFlurryParticles(color: color, count: Int.random(in: 2...4))
-            : []
-        marks.append(SplashMark(id: id,
-                                x: min(max(point.x + CGFloat.random(in: -0.012...0.012), 0), 1),
-                                y: min(max(point.y + CGFloat.random(in: -0.012...0.012), 0), 1),
-                                color: color,
-                                imageIndex: imageIndex,
-                                baseSize: baseSize,
-                                size: min(baseSize * burstScale, 540),
-                                heightScale: CGFloat.random(in: 0.76...1.12),
-                                rotation: Double.random(in: -36...36),
-                                flurryLevel: burstLevel,
-                                particles: particles))
-        activeBurstMarkIDs.insert(id)
-        if soundEnabled { playfulSound.play(streak: burstLevel) }
-        if marks.count > 18 {
-            let removedIDs = marks.prefix(marks.count - 18).map(\.id)
-            activeBurstMarkIDs.subtract(removedIDs)
-            marks.removeFirst(marks.count - 18)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) { [weak self] in
-            guard let self else { return }
+        if soundEnabled { playfulSound.play(streak: pressCount) }
+        if marks.count > 18 { marks.removeFirst(marks.count - 18) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.markLifetime) { [weak self] in
+            guard let self,
+                  let mark = self.marks.first(where: { $0.id == id }),
+                  mark.expiresAt == deadline else { return }
             withAnimation(.easeOut(duration: 0.3)) { self.marks.removeAll { $0.id == id } }
-            self.activeBurstMarkIDs.remove(id)
-            if self.activeBurstMarkIDs.isEmpty { self.burstLevel = 0 }
-        }
-    }
-
-    private var burstScale: CGFloat {
-        1 + CGFloat(max(burstLevel - 1, 0)) * 0.11
-    }
-
-    private func makeFlurryParticles(color: Color, count: Int) -> [PlayfulParticle] {
-        let symbols = ["sparkle", "star.fill", "sparkles", "plus", "heart.fill", "circle.fill"]
-        return (0..<count).map { _ in
-            PlayfulParticle(kind: .sparkle,
-                            symbol: symbols.randomElement() ?? "sparkle",
-                            xOffset: CGFloat.random(in: -0.64...0.64),
-                            yOffset: CGFloat.random(in: -0.64...0.64),
-                            size: CGFloat.random(in: 0.07...0.15),
-                            rotation: Double.random(in: -45...45),
-                            color: colors.randomElement() ?? color)
         }
     }
 
@@ -431,74 +390,6 @@ final class CleaningModeManager: ObservableObject {
         return controlsFrame.contains(contentPoint)
     }
 
-    private func startAmbientEvents() {
-        guard ambientTask == nil else { return }
-        nextAmbientEventTime = ProcessInfo.processInfo.systemUptime + Double.random(in: 10...17)
-        ambientTask = Task { @MainActor [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 750_000_000)
-                guard !Task.isCancelled, let self else { return }
-                self.emitAmbientEventIfDue()
-            }
-        }
-    }
-
-    private func emitAmbientEventIfDue() {
-        let now = ProcessInfo.processInfo.systemUptime
-        guard now >= nextAmbientEventTime else { return }
-        nextAmbientEventTime = now + Double.random(in: 13...24)
-
-        var point = CGPoint(x: CGFloat.random(in: 0.1...0.9), y: CGFloat.random(in: 0.1...0.9))
-        for _ in 0..<10 where (0.34...0.66).contains(point.x) && (0.30...0.70).contains(point.y) {
-            point = CGPoint(x: CGFloat.random(in: 0.1...0.9), y: CGFloat.random(in: 0.1...0.9))
-        }
-
-        let kind = AmbientEffect.Kind.allCases.randomElement() ?? .bubbles
-        let particles = makeAmbientParticles(for: kind)
-        nextAmbientEffectID += 1
-        let id = nextAmbientEffectID
-        withAnimation(.easeOut(duration: 0.25)) {
-            ambientEffects.append(AmbientEffect(id: id, x: point.x, y: point.y,
-                                                size: CGFloat.random(in: 110...175),
-                                                rotation: Double.random(in: -30...30),
-                                                duration: Double.random(in: 1.8...2.7),
-                                                particles: particles))
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            withAnimation(.easeOut(duration: 0.35)) {
-                self?.ambientEffects.removeAll { $0.id == id }
-            }
-        }
-    }
-
-    private func makeAmbientParticles(for kind: AmbientEffect.Kind) -> [PlayfulParticle] {
-        let count = kind == .comet ? 5 : Int.random(in: 5...9)
-        return (0..<count).map { index in
-            let particleKind: PlayfulParticle.Kind
-            let symbol: String
-            switch kind {
-            case .bubbles:
-                particleKind = .bubble
-                symbol = ""
-            case .confetti:
-                particleKind = .confetti
-                symbol = ""
-            case .comet:
-                particleKind = index == 0 ? .sparkle : .confetti
-                symbol = index == 0 ? "sparkles" : ""
-            }
-            return PlayfulParticle(kind: particleKind,
-                                   symbol: symbol,
-                                   xOffset: CGFloat.random(in: -0.62...0.62),
-                                   yOffset: CGFloat.random(in: -0.62...0.62),
-                                   size: kind == .comet && index == 0
-                                       ? CGFloat.random(in: 0.28...0.38)
-                                       : CGFloat.random(in: 0.10...0.24),
-                                   rotation: Double.random(in: -70...70),
-                                   color: colors.randomElement() ?? .pink)
-        }
-    }
-
     private func showOverlays() {
         let screens = NSScreen.screens
         let targets = screens.isEmpty ? [NSRect(x: 0, y: 0, width: 800, height: 600)] : screens.map(\.frame)
@@ -507,6 +398,8 @@ final class CleaningModeManager: ObservableObject {
             if let existing = old.first(where: { $0.frame == frame }) { return existing }
             let panel = UnlockableOverlayPanel(contentRect: frame, styleMask: [.borderless], backing: .buffered, defer: false)
             panel.isFloatingPanel = true
+            // Keyboard capture continues when another app is active; its controls must stay visible too.
+            panel.hidesOnDeactivate = false
             panel.becomesKeyOnlyIfNeeded = false
             panel.level = NSWindow.Level(rawValue: Int(CGShieldingWindowLevel()))
             panel.backgroundColor = .clear
@@ -802,33 +695,9 @@ private final class UnlockableOverlayPanel: NSPanel {
     override var canBecomeKey: Bool { true }
 }
 
-struct PlayfulParticle: Identifiable {
-    enum Kind { case sparkle, bubble, confetti }
-
-    let id = UUID()
-    let kind: Kind
-    let symbol: String
-    let xOffset: CGFloat
-    let yOffset: CGFloat
-    let size: CGFloat
-    let rotation: Double
-    let color: Color
-}
-
-struct AmbientEffect: Identifiable {
-    enum Kind: CaseIterable { case bubbles, confetti, comet }
-
-    let id: Int
-    let x: CGFloat
-    let y: CGFloat
-    let size: CGFloat
-    let rotation: Double
-    let duration: Double
-    let particles: [PlayfulParticle]
-}
-
 struct SplashMark: Identifiable {
     let id: Int
+    let keyCode: Int64
     let x: CGFloat
     let y: CGFloat
     let color: Color
@@ -837,8 +706,8 @@ struct SplashMark: Identifiable {
     var size: CGFloat
     let heightScale: CGFloat
     let rotation: Double
-    var flurryLevel: Int
-    var particles: [PlayfulParticle]
+    var pressCount: Int
+    var expiresAt: TimeInterval
 }
 
 private struct CleaningOverlayView: View {
@@ -849,25 +718,26 @@ private struct CleaningOverlayView: View {
             ZStack {
                 Color.clear.ignoresSafeArea()
                 ForEach(manager.marks) { mark in
-                    ZStack {
-                        Handprint(color: mark.color, imageIndex: mark.imageIndex)
-                        if mark.flurryLevel >= 3 {
-                            ForEach(mark.particles) { particle in
-                                ParticleGlyph(particle: particle, size: mark.size * particle.size)
-                                    .offset(x: particle.xOffset * mark.size,
-                                            y: particle.yOffset * mark.size)
-                            }
-                        }
-                    }
-                        .frame(width: mark.size, height: mark.size * mark.heightScale)
+                    let aspect = mark.heightScale
+                    let angle = mark.rotation * .pi / 180
+                    let cosine = CGFloat(abs(cos(angle)))
+                    let sine = CGFloat(abs(sin(angle)))
+                    let size = min(mark.size,
+                                   geometry.size.width / (cosine + sine * aspect),
+                                   geometry.size.height / (sine + cosine * aspect))
+                    let width = size
+                    let height = size * aspect
+                    let xInset = (cosine * width + sine * height) / 2
+                    let yInset = (sine * width + cosine * height) / 2
+                    let x = min(max(mark.x * geometry.size.width, xInset), geometry.size.width - xInset)
+                    let y = min(max(mark.y * geometry.size.height, yInset), geometry.size.height - yInset)
+                    Handprint(color: mark.color, imageIndex: mark.imageIndex)
+                        .frame(width: width, height: height)
                         .rotationEffect(.degrees(mark.rotation))
-                        .position(x: mark.x * geometry.size.width, y: mark.y * geometry.size.height)
+                        .position(x: x, y: y)
                         .transition(.scale(scale: 0.45).combined(with: .opacity))
                         .animation(.spring(response: 0.38, dampingFraction: 0.68), value: mark.size)
                         .allowsHitTesting(false)
-                }
-                ForEach(manager.ambientEffects) { effect in
-                    AmbientEffectView(effect: effect, containerSize: geometry.size)
                 }
                 VStack(spacing: 15) {
                     Image(systemName: "keyboard").font(.system(size: 34)).foregroundStyle(.white.opacity(0.8))
@@ -912,63 +782,6 @@ private struct CleaningOverlayView: View {
                 .frame(width: 456, height: 320)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             }
-        }
-    }
-}
-
-private struct ParticleGlyph: View {
-    let particle: PlayfulParticle
-    let size: CGFloat
-
-    var body: some View {
-        Group {
-            switch particle.kind {
-            case .sparkle:
-                Image(systemName: particle.symbol)
-                    .font(.system(size: size, weight: .bold))
-                    .foregroundStyle(particle.color)
-                    .shadow(color: particle.color.opacity(0.55), radius: size * 0.28)
-            case .bubble:
-                Circle()
-                    .fill(particle.color.opacity(0.13))
-                    .overlay { Circle().strokeBorder(particle.color.opacity(0.8), lineWidth: max(1.5, size * 0.055)) }
-                    .overlay(alignment: .topLeading) {
-                        Circle().fill(.white.opacity(0.72))
-                            .frame(width: size * 0.2, height: size * 0.2)
-                            .padding(size * 0.22)
-                    }
-                    .shadow(color: particle.color.opacity(0.3), radius: size * 0.12)
-            case .confetti:
-                Capsule().fill(particle.color.gradient)
-                    .shadow(color: particle.color.opacity(0.35), radius: size * 0.15)
-            }
-        }
-        .frame(width: size, height: size)
-        .rotationEffect(.degrees(particle.rotation))
-    }
-}
-
-private struct AmbientEffectView: View {
-    let effect: AmbientEffect
-    let containerSize: CGSize
-    @State private var drifting = false
-
-    var body: some View {
-        ZStack {
-            ForEach(effect.particles) { particle in
-                ParticleGlyph(particle: particle, size: effect.size * particle.size)
-                    .offset(x: particle.xOffset * effect.size,
-                            y: particle.yOffset * effect.size)
-            }
-        }
-        .frame(width: effect.size * 2, height: effect.size * 2)
-        .rotationEffect(.degrees(effect.rotation))
-        .scaleEffect(drifting ? 1.18 : 0.72)
-        .opacity(drifting ? 0.04 : 0.86)
-        .position(x: effect.x * containerSize.width, y: effect.y * containerSize.height)
-        .allowsHitTesting(false)
-        .onAppear {
-            withAnimation(.easeOut(duration: effect.duration)) { drifting = true }
         }
     }
 }

@@ -32,8 +32,8 @@ cat > "$CONTENTS/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>KeySplash</string>
     <key>CFBundleIconFile</key><string>KeySplash</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>1.2.5</string>
-    <key>CFBundleVersion</key><string>9</string>
+    <key>CFBundleShortVersionString</key><string>1.2.6</string>
+    <key>CFBundleVersion</key><string>10</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>NSPrincipalClass</key><string>NSApplication</string>
 </dict>
